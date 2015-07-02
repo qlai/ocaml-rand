@@ -22,7 +22,7 @@ let rand outfile randfile base hex =
 
 let base_str = 
 match base with
-| base64 -> Nocrypto.base64.encode (*some code that encodes randbytes with base 64)
+| base64 -> Nocrypto.base64.encode (*some code that encodes randbytes with base 64*)
 | None -> Nocrypto.rng.generate (*some arguments*)
 
 let hexed= 
@@ -46,18 +46,19 @@ open Cmdliner;;
 
 let outfile =
 	let doc = "Write to file instead of standard output." in
-	Arg.(value &
+	Arg.(value & opt None & info ["out"; "outfile"] ~doc)
 
 let randfile = 
-	let doc = "to be added
+	let doc = "to be added"
+	Arg.(value & info ["randfile"] ~doc)
 
 let base = 
 	let doc = "perform base64 encoding on output"
-	Arg.(
+	Arg.(value & opt & info ["b"; "base64"] ~doc)
 
 let hex = 
 	let doc = "show the output as hex string"
-	Arg.(
+	Arg.(value & opt & info ["hex"] ~doc)
 
 let cmd =
 	let doc = "rand" in
