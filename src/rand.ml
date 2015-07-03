@@ -14,19 +14,21 @@ dependencies
 
 
 (*implementation*)
-type base = base64 | None
-
-type outfile = out | None
+type base = base64 
+type outfile = out
+type hexe = hex
 
 let rand outfile randfile base hex = 
 
 let base_str = 
-match base with
-| base64 -> Nocrypto.base64.encode (*some code that encodes randbytes with base 64*)
-| None -> Nocrypto.rng.generate (*some arguments*)
+	match base with
+		| base64 -> Nocrypto.base64.encode (*some code that encodes randbytes with base 64*)
+		| _ -> Nocrypto.rng.generate (*some arguments*)
 
-let hexed= 
-Hex.of_string hex
+let hexed = 
+	match hexe with 
+		|hex -> Hex.of_string hex
+		|_ -> print_endline "Not hexed"
 
 let save file string =
 let channel = open_out file in
@@ -34,9 +36,9 @@ output_string channel string;
 close_out channel;;
 
 let outputfile =
-match out with
-| out -> save outfile randbytes
-| None -> print_endline outfile
+	match out with
+		| out -> save outfile randbytes
+		| _ -> print_endline outfile
 
 print_endline hexed;;
 
