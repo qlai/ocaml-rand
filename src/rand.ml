@@ -10,21 +10,26 @@ dependencies
 -nocrypto
 -ocaml-hex
 *)
+type encoding = base64 | hex
 
 (*implementation*)
-let rand outfile randfile base hex = 
+let rand outfile randseed encode = 
 
-let generatedRand = Nocrypto.rng.generate (*generate pseudo rand*)
+let read_file filename = 
+	let chan = open_in filename in
+	Std.input_list chan
 
-let base_str = 
-	match base with
-		| "base64" -> Nocrypto.base64.encode generatedRand(*some code that encodes randbytes with base 64*)
-		| "NoBase64" -> generatedRand
+let seed = read_file randseed in
+(*TO DO: feed seed into PRNG*)
 
-let hexed = 
-	match hex with 
-		|"hex" -> Hex.of_string base_str
-		|"NoHexEncoding" -> print_endline "Not hexed"
+let generatedRand = Nocrypto.rng.generate (*TO DO: use nocrypto lib generate pseudo rand*)
+
+let encodedRand = 
+	match encode with
+		| "base64" -> Nocrypto.base64.encode generatedRand(*TO DO: use nocrypto to encode randbytes with base 64*)
+		| "hex" -> Hex.of_string generatedRand (*hex encoding of randbytes*)
+		| "NoEncoding" -> generatedRand
+
 
 let save file string =
 let channel = open_out file in
@@ -33,8 +38,8 @@ close_out channel;;
 
 let outputfile =
 	match outfile with
-		| Some x -> if hex = "hex" then save x hexed else save x base_str
-		| "NoOutput" -> if hex = "hex" then print_endline hexed else print_endline base_str 
+		| Some x -> save x encodedRand
+		| "NoOutput" -> print_endline encodedRand
 
 print_endline "execution complete"
 
@@ -46,17 +51,13 @@ let outfile =
 	let doc = "Write to file instead of standard output." in
 	Arg.(value & opt string "NoOutput" & info ["out"; "outfile"] ~doc)
 
-let randfile = 
+let randseed = 
 	let doc = "to be added" in
-	Arg.(value & opt string "file for rand seed" & info ["randfile"] ~doc)
+	Arg.(value & opt string "file for rand seed" & info ["randseed"] ~doc)
 
-let base = 
-	let doc = "perform base64 encoding on output" in
-	Arg.(value & pos 0 string "NoBase64" & info ["b"; "base64"] ~doc)
-
-let hex = 
-	let doc = "show the output as hex string" in
-	Arg.(value & pos 1 string "NoHexEncoding" & info ["hex"] ~doc)
+let encode = 
+	let doc = "perform base64 or hex encoding on output" in
+	Arg.(value & pos 0 string "NoEncoding" & info ["encoding"] ~doc)
 
 let cmd =
 	let doc = "rand" in
