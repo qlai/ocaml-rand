@@ -1,8 +1,6 @@
 # OASIS_START
 # DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
 
-VFILE = src/rand_version.ml
-
 SETUP = ocaml setup.ml
 
 build: setup.data
@@ -39,11 +37,5 @@ configure:
 	$(SETUP) -configure $(CONFIGUREFLAGS)
 
 .PHONY: build doc test all install uninstall reinstall clean distclean configure
-
-$(VFILE): _oasis
-	echo "let currentversion = \"$(VERSION)\"" > $@
-
-VERSION = $(shell grep 'Version:' _oasis| sed 's/Version: *//')
-
 
 # OASIS_STOP
