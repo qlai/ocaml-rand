@@ -15,7 +15,7 @@ rand [-out OUTFILE | --outfile=OUTFILE] [-seed RANDSEED | --randseed=RANDSEED] [
 
 *)
 open Hex
-
+open Cmdliner
 (*implementation*)
 
 type encoding = Base64 | Hex | NoEncoding
@@ -28,7 +28,7 @@ let rand outfile randseed encode =
     let generatedRand =
     match inputseed with
       |"noseed" -> Nocrypto.Rng.generate (*TO DO: use nocrypto lib generate pseudo rand*)
-      | _ -> Niocrypto.Rng.create ~seed:inputseed in (*TO DO: sort out seeded generation*)
+      | _ -> Nocrypto.Rng.create ~seed:inputseed in (*TO DO: sort out seeded generation*)
   let encodedRand = 
     match encode with
       | "base64" -> Nocrypto.Base64.encode generatedRand(*use nocrypto to encode randbytes with base 64 encoding*)
@@ -38,12 +38,11 @@ let rand outfile randseed encode =
     let channel = open_out file in
       output_string channel string;
       close_out channel in
-    match outfile with
+match outfile with
       | Some x -> save x encodedRand
       | "NoOutput" -> print_endline encodedRand
 (* commandline interface*)
 
-open Cmdliner;;
 let outfile =
   let doc = "Write to file instead of standard output." in
   Arg.(required & pos_left ~rev:true 0 (some string) file [] & info ["out"; "outfile"] ~docv:"OUTFILE" ~doc)
