@@ -110,7 +110,7 @@ open Cmdliner
 
 let aaoutfile =
   let doc = "This is the file that the PRN will be written to" in
-  Arg.(value & pos 0 string "somefile.txt" & info ["outfile"] ~doc)
+  Arg.(value & pos 0 string "somefile.txt" & info [] ~doc)
 
 let aaseedfile =
   let doc = "This will be used to seed PRNG" in
