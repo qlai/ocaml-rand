@@ -12,4 +12,4 @@ Executable rand
   Install: true
   Path: src/
   MainIs: rand.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, hex
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner, hex, extlib

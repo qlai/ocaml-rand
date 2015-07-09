@@ -1,2 +1,8 @@
 _build
 *.sw?
+*.byte
+*.native
+somefile.txt
+setup.data
+setup.log
+
