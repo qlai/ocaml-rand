@@ -90,12 +90,13 @@ let savefile afile thingtobesaved =
 
 let readfile bfile =
   let channel = open_in bfile in
-  Std.input_all channel
+  Bytes.to_string(Std.input_all channel)(*TODO: for some reason Bytes.to_string gives bytes rather than string*)
 
 let number = 64
 let encode = Base64
 let outfile = "somefile.txt"
-let running = savefile outfile (Cstruct.to_string (main number encode))(*TODO: Sort out encoding for hex for matching case*)
+let running () = savefile outfile (Cstruct.to_string (main number encode));;(*TODO: Sort out encoding for hex for matching case*)
+running ();;
 (*  match encode with  
   |Noencode | Base64 -> Cstruct.to_string(main number encode)
   |Hex ->  Hex.of_cstruct (main number encode)*)
@@ -105,6 +106,8 @@ let running = savefile outfile (Cstruct.to_string (main number encode))(*TODO: S
 let rand (aaoutfile:string) (aaseedfile:string) (encodemode:encode) (nobits:int)=
   savefile aaoutfile (Cstruct.to_string(main nobits encodemode)) 
 
+
+open Cmdliner
 
 let aaoutfile =
   let doc = "This is the file that the PRN will be written to" in

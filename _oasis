@@ -13,3 +13,9 @@ Executable rand
   Path: src/
   MainIs: rand.ml
   BuildDepends: nocrypto, nocrypto.unix, cmdliner, hex, extlib
+
+Executable ciphers
+  Install: true
+  Path: src/
+  MainIs: ciphers.ml
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner
