@@ -18,4 +18,5 @@ Executable ciphers
   Install: true
   Path: src/
   MainIs: ciphers.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner, tls, x509
+
