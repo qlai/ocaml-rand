@@ -1,5 +1,5 @@
 (*rand -generate pseudo-random byte
-
+u
 args
 -out file
 -rand file(s)  (Use specified file or files or EGD socket (see RAND_egd) for seeding the random number generator. Multiple files can be specified separated by a OS-dependent character. The separator is ; for MS-Windows, , for OpenVMS, and : for all others.)
@@ -90,13 +90,13 @@ let savefile afile thingtobesaved =
 
 let readfile bfile =
   let channel = open_in bfile in
-  Bytes.to_string(Std.input_all channel)(*TODO: for some reason Bytes.to_string gives bytes rather than string*)
+  Std.input_all channel
 
 let number = 64
 let encode = Base64
 let outfile = "somefile.txt"
 let running () = savefile outfile (Cstruct.to_string (main number encode));;(*TODO: Sort out encoding for hex for matching case*)
-running ();;
+
 (*  match encode with  
   |Noencode | Base64 -> Cstruct.to_string(main number encode)
   |Hex ->  Hex.of_cstruct (main number encode)*)
@@ -110,8 +110,8 @@ let rand (aaoutfile:string) (aaseedfile:string) (encodemode:encode) (nobits:int)
 open Cmdliner
 
 let aaoutfile =
-  let doc = "This is the file that the PRN will be written to" in
-  Arg.(value & pos 0 string "somefile.txt" & info [] ~doc)
+  let doc = "This is the file that the PRN will be written to (default=prngstring.txt" in
+  Arg.(value & pos 0 string "prngstring.txt" & info [] ~doc)
 
 let aaseedfile =
   let doc = "This will be used to seed PRNG" in
@@ -127,15 +127,15 @@ let encodemode =
   Arg.(last & vflag_all [Noencode] [base64; hex; noencode])
  
 let nobits =
-  let doc = "no of bits u want this to be " in
-  Arg.(value & opt int 64 & info ["NoOfBits"] ~doc)
-(*TODO: might need to change 'opt' option*)
+  let doc = "no of bits u want this to be (default = 64)" in
+  Arg.(value & opt int number & info ["NoOfBits"] ~doc)
 
 let rand_t = Term.(pure rand $ aaoutfile $ aaseedfile $ encodemode $ nobits)
 
 let info =
-  let doc = "PRNG cmd tool" in
-  let man = [`S "BUGS"; `P "email";] in
+  let doc = "type rand OUTPUTFILENAME [OPTIONS]" in
+  let man = [`S "BUGS"; 
+  `P "email <giulia.lai@gmail.com>";] in
   Term.info "rand" ~version:"0.0.2" ~doc ~man
 
 let () = match Term.eval (rand_t, info) with
