@@ -97,17 +97,8 @@ let encode = Base64
 let outfile = "somefile.txt"
 let running () = savefile outfile (Cstruct.to_string (main number encode));;(*TODO: Sort out encoding for hex for matching case*)
 
-(*  match encode with  
-  |Noencode | Base64 -> Cstruct.to_string(main number encode)
-  |Hex ->  Hex.of_cstruct (main number encode)*)
-
-(*TODO: before this it compiles on its own, and cmdline interface compiles too, but need more work*)
-
 let rand (aaoutfile:string) (aaseedfile:string) (encodemode:encode) (nobits:int)=
   savefile aaoutfile (Cstruct.to_string(main nobits encodemode)) 
-
-
-open Cmdliner
 
 let aaoutfile =
   let doc = "This is the file that the PRN will be written to (default=prngstring.txt" in

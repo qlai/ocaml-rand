@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 5ef9b8e8c2c92a622c4c8c7664e364a1)
+# DO NOT EDIT (digest: 13b5d0f611087c8dce1b12add4d337f1)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -16,10 +16,12 @@ true: annot, bin_annot
 "_darcs": not_hygienic
 # Executable rand
 "src/rand.byte": pkg_cmdliner
+"src/rand.byte": pkg_cstruct
 "src/rand.byte": pkg_extlib
 "src/rand.byte": pkg_hex
 "src/rand.byte": pkg_nocrypto
 "src/rand.byte": pkg_nocrypto.unix
+<src/*.ml{,i,y}>: pkg_cstruct
 <src/*.ml{,i,y}>: pkg_extlib
 <src/*.ml{,i,y}>: pkg_hex
 # Executable ciphers
@@ -33,4 +35,15 @@ true: annot, bin_annot
 <src/*.ml{,i,y}>: pkg_nocrypto.unix
 <src/*.ml{,i,y}>: pkg_tls
 <src/*.ml{,i,y}>: pkg_x509
+# Executable base64
+"src/encode/base64.byte": pkg_cmdliner
+"src/encode/base64.byte": pkg_cstruct
+"src/encode/base64.byte": pkg_extlib
+"src/encode/base64.byte": pkg_nocrypto
+"src/encode/base64.byte": pkg_nocrypto.unix
+<src/encode/*.ml{,i,y}>: pkg_cmdliner
+<src/encode/*.ml{,i,y}>: pkg_cstruct
+<src/encode/*.ml{,i,y}>: pkg_extlib
+<src/encode/*.ml{,i,y}>: pkg_nocrypto
+<src/encode/*.ml{,i,y}>: pkg_nocrypto.unix
 # OASIS_STOP

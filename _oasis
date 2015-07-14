@@ -12,7 +12,7 @@ Executable rand
   Install: true
   Path: src/
   MainIs: rand.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, hex, extlib
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner, hex, extlib, cstruct
 
 Executable ciphers
   Install: true
@@ -20,3 +20,8 @@ Executable ciphers
   MainIs: ciphers.ml
   BuildDepends: nocrypto, nocrypto.unix, cmdliner, tls, x509
 
+Executable base64
+  Install: true
+  Path: src/encode
+  MainIs: base64.ml
+  BuildDepends:nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
