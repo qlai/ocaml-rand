@@ -1,23 +1,21 @@
 # ocaml-rand
 
-trying to do what openssl rand does: https://www.openssl.org/docs/apps/rand.html
+## About
 
-args
--out file
--rand file(s)
--base64
--hex
+Some simple utilities for doing OpenSSL Tasks.
 
-dependencies
--nocrypto
--ocaml-hex
--cmdliner
+## Dependencies
 
-now also trying to do what openssl ciphers does: https://www.openssl.org/docs/apps/ciphers.html
+Dependent on `x509`, `nocrypto`, `hex` libraries. Command-line interface generated using the latest release of `cmdliner`. Also requires `cstruct` and `extlib`.
+These can all be installed using `opam` (although some may need to be pinned to main repos).
 
-args
--s -v -V -ssl3 -tls1 -stdname cipherlist
+```
+opam pin add "package" https://github.com/packagelink.git
+opam install nocrypto x509 cstruct cmdliner extlib
+```
 
-dependencies
--nocrypto
--cmdliner
+## Notes
+I am still working on the tools so this hasn't been packaged properly yet. However any feedbacks/suggestions are always welcome :) 
+
+
+
