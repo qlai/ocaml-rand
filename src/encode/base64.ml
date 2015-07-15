@@ -1,13 +1,5 @@
 open Cmdliner
-
-let savefile afile thingtobesaved =
-  let channel = open_out afile in
-  output_string channel thingtobesaved;
-  close_out channel 
-
-let readfile bfile =
-  let channel = open_in bfile in
-  Std.input_all channel
+open Common
 
 let base64 code infile outfile =
   let coding = match code with
@@ -16,7 +8,7 @@ let base64 code infile outfile =
   | _ -> failwith "Please use either 'E' or 'D' for encoding or decoding" in
   savefile outfile (Cstruct.to_string (coding (Cstruct.of_string (readfile infile))))
 
-  (*commandline interface*)
+ (*commandline interface*)
 
 let code = 
   let doc = "Enter E for encoding and D for decoding" in

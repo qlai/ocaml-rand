@@ -25,3 +25,12 @@ Executable base64
   Path: src/encode
   MainIs: base64.ml
   BuildDepends:nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+
+
+Executable aes
+  Install: true
+  Path: src/encode
+  MainIs: aes.ml
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+
+

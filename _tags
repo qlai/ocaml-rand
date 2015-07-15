@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 13b5d0f611087c8dce1b12add4d337f1)
+# DO NOT EDIT (digest: c6550e89515b1d83929abefbb0ea5a41)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -41,6 +41,12 @@ true: annot, bin_annot
 "src/encode/base64.byte": pkg_extlib
 "src/encode/base64.byte": pkg_nocrypto
 "src/encode/base64.byte": pkg_nocrypto.unix
+# Executable aes
+"src/encode/aes.byte": pkg_cmdliner
+"src/encode/aes.byte": pkg_cstruct
+"src/encode/aes.byte": pkg_extlib
+"src/encode/aes.byte": pkg_nocrypto
+"src/encode/aes.byte": pkg_nocrypto.unix
 <src/encode/*.ml{,i,y}>: pkg_cmdliner
 <src/encode/*.ml{,i,y}>: pkg_cstruct
 <src/encode/*.ml{,i,y}>: pkg_extlib
