@@ -1,36 +1,74 @@
 open Cmdliner
 open Common
+open Nocrypto.Cipher_block
 
+(*implementation*)
 type mode = ECB | CBC | CTR | GCM | CCM
 
-let readkeyfromfile (*read key from file*)
-
-let encryption enc mode more_args = (*TODO: need more args to make this work*)
-  match enc with
-  | ECB -> Nocrypto.AES.ECB.encrypt 
-  | CBC -> Nocrypto.AES.CBC.encrypt
-  | CTR -> Nocrypto.AES.CTR.encrypt
-  | GCM -> Nocrypto.AES.GCM.encrypt
-  | CCM -> Nocrypto.AES.CCM.encrypt
+let encryption mode key ?ctr ?off ?iv ?nonce ?adata thingtobeenc = (*TODO: need more args to make this work*)
+  match mode with(* 
+  | ECB -> AES.ECB.encrypt(* key thingtobeenc*) 
+  | CBC -> AES.CBC.encrypt(* key thingtobeenc*)
+  | CTR -> AES.CTR.encrypt(* key ctr off thingtobeenc (*TODO: chcek this*)*)
+  | GCM -> AES.GCM.encrypt(* key iv adata thingtobeenc*)
+  | CCM -> AES.CCM.encrypt(*key nonce adata thingtobeenc*)*)
   | _ -> failwith "invalid encrypting mode"
 
-let decryption enc mode more_args =
-  match enc with
-  | ECB -> Nocrypto.AES.ECB.decrypt
-  | CBC -> Nocrypto.AES.CBC.decrypt
-  | CTR -> Nocrypto.AES.CTR.decrypt
-  | GCM -> Nocrypto.AES.GCM.decrypt
-  | CCM -> Nocrypto.AES.CCM.decrypt
+let decryption mode key thingtobedec =
+  match mode with(*
+  | ECB -> AES.ECB.decrypt
+  | CBC -> AES.CBC.decrypt
+  | CTR -> AES.CTR.decrypt
+  | GCM -> AES.GCM.decrypt
+  | CCM -> AES.CCM.decrypt*)
   | _ -> failwith "invalid decrypting mode"
 
 let aes encode mode key keyfile infile outfile = 
-  let getkey = match (readkeyfromfile keyfile) with
-  | "none" -> key (*TODO: here we need to decide whether key is entered or read from file*)
-  | _ -> readkeyfromfile keyfile in
-  let coding = match code with 
-  | "E" -> encryption args
-  | "D" -> decryption args 
-
-
+  let checkkey akey =
+  match akey with 
+  | "NA" -> failwith "no key entered"
+  | _ -> akey in
+  let getkey = match keyfile with
+  | "NA" -> checkkey key (*TODO: here we need to decide whether key is entered or read from file*)
+  | _ -> readfile keyfile in
+  let coding = match encode with 
+  | "E" -> encryption mode getkey (readfile infile)
+  | "D" -> decryption mode getkey (readfile infile) in
+savefile outfile coding
 
   (*commandline interface start here*)
+
+let encode =
+  let doc = "E or D" in
+  Arg.(value & pos 0 string "E" & info [] ~doc)
+
+let mode = 
+  let doc = "block cipher options " in
+  Arg.(value & opt string "NA" & info ["m"; "mode"] ~doc)
+
+let key = 
+  let doc = "key" in
+  Arg.(value & opt string "NA" & info ["k"; "key"] ~doc)
+
+let keyfile =
+  let doc = "keyfile" in
+  Arg.(value & opt string "NA" & info ["kf" ; "keyfile"] ~doc)
+
+let infile =
+  let doc = "filein" in
+  Arg.(value & opt string "infile.txt" & info ["i"; "in"] ~doc)
+
+let outfile =
+  let doc = "fileout" in
+  Arg.(value &opt string "outfile.txt" & info ["o"; "out"] ~doc)
+
+let cmd =
+  let doc = "aes block cipher" in
+  let man = [
+    `S "BUGS" ;
+    `P "Submit via github"]
+  in
+  Term.(pure aes $ encode $ mode $ key $ keyfile $ infile $ outfile),
+  Term.info "aes" ~version:"0.0.1" ~doc ~man
+
+let () = match Term.eval cmd with `Error _ -> exit 1 | _ -> exit 0
