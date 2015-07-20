@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: f10821cbc5de132eab7afe5f15cba58d)
+# DO NOT EDIT (digest: 917b01cd45734149470f983312bdf425)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -36,17 +36,17 @@ true: annot, bin_annot
 <src/*.ml{,i,y}>: pkg_tls
 <src/*.ml{,i,y}>: pkg_x509
 # Executable base64
-"src/encode/base64.byte": pkg_cmdliner
-"src/encode/base64.byte": pkg_cstruct
-"src/encode/base64.byte": pkg_extlib
-"src/encode/base64.byte": pkg_nocrypto
-"src/encode/base64.byte": pkg_nocrypto.unix
+"src/encode/base64enc.byte": pkg_cmdliner
+"src/encode/base64enc.byte": pkg_cstruct
+"src/encode/base64enc.byte": pkg_extlib
+"src/encode/base64enc.byte": pkg_nocrypto
+"src/encode/base64enc.byte": pkg_nocrypto.unix
 # Executable aescbc
-"src/encode/aes-cbc.byte": pkg_cmdliner
-"src/encode/aes-cbc.byte": pkg_cstruct
-"src/encode/aes-cbc.byte": pkg_extlib
-"src/encode/aes-cbc.byte": pkg_nocrypto
-"src/encode/aes-cbc.byte": pkg_nocrypto.unix
+"src/encode/aes_cbc.byte": pkg_cmdliner
+"src/encode/aes_cbc.byte": pkg_cstruct
+"src/encode/aes_cbc.byte": pkg_extlib
+"src/encode/aes_cbc.byte": pkg_nocrypto
+"src/encode/aes_cbc.byte": pkg_nocrypto.unix
 <src/encode/*.ml{,i,y}>: pkg_cmdliner
 <src/encode/*.ml{,i,y}>: pkg_cstruct
 <src/encode/*.ml{,i,y}>: pkg_extlib
