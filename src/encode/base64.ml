@@ -14,14 +14,6 @@ let code =
   let doc = "Enter E for encoding and D for decoding" in
   Arg.(value & pos 0 string "E" & info [] ~doc)
 
-let infile = 
-  let doc = "File to be encoded with base64 or decoded from base64." in
-  Arg.(value & opt string "infile.txt" & info ["i"; "in"] ~doc)
-
-let outfile =
-  let doc = "File for encoded/decoded string to be saved." in
-  Arg.(value & opt string "outfile.txt" & info ["o"; "out"] ~doc)
-  
 let cmd =
   let doc = "encodes/decodes to/from base64; enter 'E' or 'D' before other args for encoding or decoding (default=E)" in
   let man = [
