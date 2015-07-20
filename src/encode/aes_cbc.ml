@@ -3,7 +3,7 @@ open Common
 open Nocrypto
 open Cipher_block
 
-let createiv ivfile nobits=
+let createiv ivfile nobits =
   match ivfile with  
   |"NA" -> (*TODO: generate random number and save in file called ivfile*)Rng.generate (nobits/8)
   | _ -> (*TODO: seed rng from this file*)Cstruct.of_string(readfile ivfile)
@@ -15,10 +15,10 @@ let aescbc encode nobits yourkey keyfile ivfile infile outfile =
   | "NA" -> failwith "no key entered"
   | _ -> akey in
   let getkey = match keyfile with
-  | "NA" -> checkkey yourkey |> Cstruct.of_string |> AES.CBC.of_secret (*TODO: here we need to decide whether key is entered or read from file*)
-  | _ -> readfile keyfile |> Cstruct.of_string |> AES.CBC.of_secret in
-  let iv = createiv ivfile nobits in
-  let key = getkey in
+  | "NA" -> checkkey yourkey (*TODO: here we need to decide whether key is entered or read from file*)
+  | _ -> readfile keyfile in
+  let iv = if ivfile != "NA" then createiv ivfile nobits else createiv getkey nobits in
+  let key = getkey |> Cstruct.of_string |> AES.CBC.of_secret in
   let coding = match encode with 
   | "E" -> AES.CBC.encrypt ~key:key ~iv:iv (Cstruct.of_string(readfile infile))
   | "D" -> AES.CBC.decrypt ~key:key ~iv:iv (Cstruct.of_string(readfile infile))
