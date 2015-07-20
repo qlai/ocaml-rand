@@ -54,14 +54,6 @@ let keyfile =
   let doc = "keyfile" in
   Arg.(value & opt string "NA" & info ["kf" ; "keyfile"] ~doc)
 
-let infile =
-  let doc = "filein" in
-  Arg.(value & opt string "infile.txt" & info ["i"; "in"] ~doc)
-
-let outfile =
-  let doc = "fileout" in
-  Arg.(value &opt string "outfile.txt" & info ["o"; "out"] ~doc)
-
 let cmd =
   let doc = "aes block cipher" in
   let man = [
