@@ -26,10 +26,10 @@ Executable base64
   MainIs: base64.ml
   BuildDepends:nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
-Executable aes
+Executable aescbc
   Install: true
   Path: src/encode
-  MainIs: aes.ml
+  MainIs: aes-cbc.ml
   BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 
