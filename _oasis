@@ -32,4 +32,9 @@ Executable aescbc
   MainIs: aes_cbc.ml
   BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
+Executable aesecb
+  Install: true
+  Path: src/encode
+  MainIs: aes_ecb.ml
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
