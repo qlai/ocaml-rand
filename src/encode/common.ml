@@ -9,8 +9,8 @@ let readfile bfile =
     let channel = open_in bfile in
       Std.input_all channel
 
-let rec padding str ?(pad=" ") =
-    if (String.length str) mod 16 = 0 then str else padding (str^pad)
+let rec padding str =
+    if (String.length str) mod 16 = 0 then str else padding (str^" ")
       
 let infile =
   let doc = "filein" in
