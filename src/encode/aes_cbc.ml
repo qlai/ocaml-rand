@@ -3,12 +3,6 @@ open Common
 open Nocrypto
 open Cipher_block
 
-let createiv ivfile =
-  match ivfile with  
-  |"NA" -> Rng.generate 16
-  | _ -> (*TODO: seed rng from this file*)Cstruct.of_string(readfile ivfile)
-
-
 let aescbc encode yourkey keyfile ivfile infile outfile = 
   let checkkey akey =
   match akey with 
@@ -42,10 +36,6 @@ let yourkey =
 let keyfile =
   let doc = "keyfile" in
   Arg.(value & opt string "NA" & info ["kf" ; "keyfile"] ~doc)
-
-let ivfile =
-  let doc = "ivfile" in
-  Arg.(value & opt string "NA" & info ["iv"; "ivfile"] ~doc)
 
 let cmd =
   let doc = "aes block cipher" in
