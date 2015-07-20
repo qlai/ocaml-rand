@@ -1,29 +1,9 @@
 open Cmdliner
 open Common
-open Nocrypto.Cipher_block
+open Nocrypto
+open Cipher_block
 
-(*implementation*)
-type mode = ECB | CBC | CTR | GCM | CCM
-
-let encryption mode key ?ctr ?off ?iv ?nonce ?adata thingtobeenc = (*TODO: need more args to make this work*)
-  match mode with(* 
-  | ECB -> AES.ECB.encrypt(* key thingtobeenc*) 
-  | CBC -> AES.CBC.encrypt(* key thingtobeenc*)
-  | CTR -> AES.CTR.encrypt(* key ctr off thingtobeenc (*TODO: chcek this*)*)
-  | GCM -> AES.GCM.encrypt(* key iv adata thingtobeenc*)
-  | CCM -> AES.CCM.encrypt(*key nonce adata thingtobeenc*)*)
-  | _ -> failwith "invalid encrypting mode"
-
-let decryption mode key thingtobedec =
-  match mode with(*
-  | ECB -> AES.ECB.decrypt
-  | CBC -> AES.CBC.decrypt
-  | CTR -> AES.CTR.decrypt
-  | GCM -> AES.GCM.decrypt
-  | CCM -> AES.CCM.decrypt*)
-  | _ -> failwith "invalid decrypting mode"
-
-let aes encode mode key keyfile infile outfile = 
+let aescbc encode key ivfile keyfile infile outfile = 
   let checkkey akey =
   match akey with 
   | "NA" -> failwith "no key entered"
@@ -41,10 +21,6 @@ savefile outfile coding
 let encode =
   let doc = "E or D" in
   Arg.(value & pos 0 string "E" & info [] ~doc)
-
-let mode = 
-  let doc = "block cipher options " in
-  Arg.(value & opt string "NA" & info ["m"; "mode"] ~doc)
 
 let key = 
   let doc = "key" in
