@@ -18,7 +18,7 @@ let aesgcm encode yourkey keyfile ivfile adata infile outfile =
   match encode, adata with 
   | "E", "NA" -> AES.GCM.encrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile))))
   | "D", "NA" ->AES.GCM.decrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
-  | "E", _  -> AES.GCM.encrypt ~key:key ~iv:iv ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile))))
+  | "E", _ -> AES.GCM.encrypt ~key:key ~iv:iv ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile))))
   | "D", _ -> AES.GCM.decrypt ~key:key  ~iv:iv ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile)))
   | _ -> failwith "please enter E or D" in
   let coding = match result with
