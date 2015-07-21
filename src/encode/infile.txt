@@ -1,2 +1,2 @@
-pseudo infile for encoding options
+helloworld!
 

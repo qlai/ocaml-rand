@@ -7,4 +7,5 @@ setup.data
 setup.log
 running
 anotherfile.txt
-
+infile.txt
+outfile.txt

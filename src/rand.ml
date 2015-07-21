@@ -101,8 +101,8 @@ let rand (aaoutfile:string) (aaseedfile:string) (encodemode:encode) (nobits:int)
   savefile aaoutfile (Cstruct.to_string(main nobits encodemode)) 
 
 let aaoutfile =
-  let doc = "This is the file that the PRN will be written to (default=prngstring.txt" in
-  Arg.(value & pos 0 string "prngstring.txt" & info [] ~doc)
+  let doc = "This is the file that the PRN will be written to" in
+  Arg.(value & opt  string "prngstring.txt" & info ["o"; "out"] ~doc)
 
 let aaseedfile =
   let doc = "This will be used to seed PRNG" in
@@ -118,7 +118,7 @@ let encodemode =
   Arg.(last & vflag_all [Noencode] [base64; hex; noencode])
  
 let nobits =
-  let doc = "no of bits u want this to be (default = 64)" in
+  let doc = "no of bits u want this to be" in
   Arg.(value & opt int number & info ["NoOfBits"] ~doc)
 
 let rand_t = Term.(pure rand $ aaoutfile $ aaseedfile $ encodemode $ nobits)
