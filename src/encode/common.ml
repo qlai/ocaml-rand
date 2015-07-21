@@ -1,4 +1,5 @@
 open Cmdliner
+open Nocrypto
 
 let savefile afile thingtobesaved =
     let channel = open_out afile in

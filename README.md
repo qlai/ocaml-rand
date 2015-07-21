@@ -6,7 +6,7 @@ Some simple utilities for doing OpenSSL Tasks.
 
 * `rand` PRNG, outputs in specified file with no encoding, base 64 encoding or hex encoding.
 * `base64` performs base64 encoding or decoding on given file and outputs to specified file.
-* `aes_ecb` and `aes_cbc` perform aes encrytion/decrytion under given modes. (under construction)
+* `aes_ccm`, `aes_ecb` and `aes_cbc` perform aes encrytion/decrytion under given modes. (under construction)
 * `ciphers` see OpenSSL documentation of tool with same name. (under construction)
 
 
