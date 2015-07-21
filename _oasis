@@ -47,7 +47,7 @@ Executable aesccm
 Executable aesgcm
   Install: true
   Path: src/encode
-  MainIs: aes_ccm.ml
+  MainIs: aes_gcm.ml
   BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
   
 Executable aesctr

@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 14bf10d5fe199763cf3b3f0182eca8fc)
+# DO NOT EDIT (digest: 95e4fd8308df5f30f0e05579a7421fef)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -54,12 +54,17 @@ true: annot, bin_annot
 "src/encode/aes_ecb.byte": pkg_nocrypto
 "src/encode/aes_ecb.byte": pkg_nocrypto.unix
 # Executable aesccm
-# Executable aesgcm
 "src/encode/aes_ccm.byte": pkg_cmdliner
 "src/encode/aes_ccm.byte": pkg_cstruct
 "src/encode/aes_ccm.byte": pkg_extlib
 "src/encode/aes_ccm.byte": pkg_nocrypto
 "src/encode/aes_ccm.byte": pkg_nocrypto.unix
+# Executable aesgcm
+"src/encode/aes_gcm.byte": pkg_cmdliner
+"src/encode/aes_gcm.byte": pkg_cstruct
+"src/encode/aes_gcm.byte": pkg_extlib
+"src/encode/aes_gcm.byte": pkg_nocrypto
+"src/encode/aes_gcm.byte": pkg_nocrypto.unix
 # Executable aesctr
 "src/encode/aes_ctr.byte": pkg_cmdliner
 "src/encode/aes_ctr.byte": pkg_cstruct
