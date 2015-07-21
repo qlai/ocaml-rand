@@ -21,29 +21,14 @@ savefile outfile (Cstruct.to_string coding)
 
   (*commandline interface start here*)
 
-let encode =
-  let doc = "E or D" in
-  Arg.(value & pos 0 string "E" & info [] ~doc)
-(*
-let nobits =
-  let doc = "number of bits" in
-  Arg.(value & opt int 128 & info ["b"; "bits"] ~doc) 
-*)
-let yourkey = 
-  let doc = "key" in
-  Arg.(value & opt string "NA" & info ["k"; "key"] ~doc)
-
-let keyfile =
-  let doc = "keyfile" in
-  Arg.(value & opt string "NA" & info ["kf" ; "keyfile"] ~doc)
 
 let cmd =
-  let doc = "aes block cipher" in
+  let doc = "aes_cbc block cipher" in
   let man = [
     `S "BUGS" ;
     `P "Submit via github"]
   in
   Term.(pure aescbc $ encode $ yourkey $ keyfile $ ivfile $ infile $ outfile),
-  Term.info "aes" ~version:"0.0.1" ~doc ~man
+  Term.info "aes_cbc" ~version:"0.0.1" ~doc ~man
 
 let () = match Term.eval cmd with `Error _ -> exit 1 | _ -> exit 0
