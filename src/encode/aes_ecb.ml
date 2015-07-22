@@ -3,6 +3,8 @@ open Common
 open Nocrypto
 open Cipher_block
 
+let () = Nocrypto_entropy_unix.initialize () 
+
 let aesecb encode yourkey keyfile infile outfile = 
   let checkkey akey =
   match akey with 
