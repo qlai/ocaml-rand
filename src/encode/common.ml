@@ -14,7 +14,6 @@ let rec padding str =
     if (String.length str) mod 16 = 0 then str else padding (str^" ")
 
 let createiv ivfile =
-  let () = Nocrypto_entropy_unix.initialize () in
   match ivfile with  
   |"NA" -> Rng.generate 16
   | _ -> (*TODO: seed rng from this file*) Cstruct.of_string (readfile ivfile)
