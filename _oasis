@@ -13,6 +13,12 @@ Executable rand
   Path: src/
   MainIs: rand.ml
   BuildDepends: nocrypto, nocrypto.unix, cmdliner, hex, extlib, cstruct
+  
+Executable aesctr
+  Install: true
+  Path: src/
+  MainIs: dgst.ml
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct, hex
 
 Executable ciphers
   Install: true
