@@ -41,18 +41,18 @@ let dimsg msg = (*initialisation might be required*)
   | SHA256 -> SHA256.digest (Cstruct.of_string msg)
   | SHA384 -> SHA384.digest (Cstruct.of_string msg)            
   | SHA512 -> SHA512.digest (Cstruct.of_string msg)
-
+  
+let decide cmode msg = 
+  match cmode with
+  | CEn -> savefile outfile (cdisp (Hex.of_cstruct (dimsg msg)))
+  | CDi -> Hex.hexdump (Hex.of_cstruct (dimsg msg));
+  
 let encoded encode cmode msg = 
   match encode with
   | NOENCODE -> savefile outfile (Cstruct.to_string (dimsg msg))
   | HEX -> decide cmode msg
   | BINARY -> failwith "haven't done this yet"
 
-let decide cmode msg = 
-  match cmode with
-  | CEn -> savefile outfile (cdisp (Hex.of_cstruct (dimsg msg)))
-  | CDi -> Hex.hexdump (Hex.of_cstruct (dimsg msg));
-   
 
 (*commandline interface*)
 
