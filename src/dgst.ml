@@ -45,7 +45,7 @@ let dimsg msg = (*initialisation might be required*)
 let decide cmode msg = 
   match cmode with
   | CEn -> savefile outfile (cdisp (Hex.of_cstruct (dimsg msg)))
-  | CDi -> Hex.hexdump (Hex.of_cstruct (dimsg msg));
+  | CDi -> Hex.hexdump (Hex.of_cstruct (dimsg msg))
   
 let encoded encode cmode msg = 
   match encode with
@@ -56,5 +56,16 @@ let encoded encode cmode msg =
 
 (*commandline interface*)
 
-
+let digest = 
+  let doc = "MD5 hash function" in
+  let md5 = MD5, Arg.info ["md5"] ~doc in
+  let doc = "SHA1 hash function" in
+  let sha1 = SHA1, Arg.info ["sha1"] ~doc in
+  let doc = "SHA224 hash function" in
+  let sha224 = SHA224, Arg.info["sha224"] ~doc in
+  let doc = "SHA384 hash function" in
+  let sha384 = SHA384, Arg.info["sha284"] ~doc in
+  let doc = "SHA512 hash function" in
+  let sha512 = SHA512, Arg. info["sha512"] ~doc in
+  Arg.(last & vflag_all [MD5] [md5; sha1; sha224; sha384; sha512])
 
