@@ -15,13 +15,6 @@ type enc =
 type cmode =
   | CEn | CDi
 
-let digest = MD5 
-let encode = HEX
-let outfile = "somefile.txt"
-let msg = "helloworld"
-let key = Cstruct.of_string "somekey"
-
-
 let cdisp somehex =
   let addsemi somelist = 
     let rec aux count acc = function
@@ -50,7 +43,7 @@ let dimsg msg digest = (*initialisation might be required*)
   | SHA384 -> SHA384.digest (Cstruct.of_string msg)            
   | SHA512 -> SHA512.digest (Cstruct.of_string msg)
   
-let decide cmode msg digest= 
+let decide cmode msg digest outfile= 
   match cmode with
   | CEn -> savefile outfile (cdisp (Hex.of_cstruct (dimsg msg digest)))
   | CDi -> Hex.hexdump (Hex.of_cstruct (dimsg msg digest))
@@ -64,10 +57,10 @@ let gethmac key msg digest=
   | SHA384 -> SHA384.hmac key (Cstruct.of_string msg)
   | SHA512 -> SHA512.hmac key (Cstruct.of_string msg)
 
-let encoded encode cmode msg digest = 
+let encoded encode cmode msg digest outfile= 
   match encode with
   | NOENCODE -> savefile outfile (Cstruct.to_string (dimsg msg digest))
-  | HEX -> decide cmode (Cstruct.to_string(dimsg msg digest)) digest
+  | HEX -> decide cmode (Cstruct.to_string(dimsg msg digest)) digest outfile
   | BINARY -> savefile outfile (tobinary msg)
 
 let checkkey key =
@@ -76,7 +69,7 @@ let checkkey key =
   | _ -> key
 
 let dgst digestmode encode c hmac key outfile infile =
-  encoded encode c (readfile infile) digestmode;
+  encoded encode c (readfile infile) digestmode outfile;
   print_endline (Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode))
 
 
@@ -120,15 +113,14 @@ let key =
   let doc = "key" in
   Arg.(value & opt string "NA" & info ["k"; "key"] ~doc)
 
-let dgst_t = Term.(pure dgst $ digestmode $ encode $ c $ hmac $ key $ outfile $ infile)
-
-let info =
+let cmd = 
   let doc = "DGST" in
   let man = [`S "BUG";
   `P "submit via github";] in
+  Term.(pure dgst $ digestmode $ encode $ c $ hmac $ key $ outfile $ infile),
   Term.info "rand" ~version:"0.0.1" ~doc ~man
 
-let () = match Term.eval (dgst_t, info) with 
+let () = match Term.eval cmd with 
 `Error _ -> exit 1 | _ -> exit 0
 
 
