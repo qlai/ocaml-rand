@@ -70,15 +70,20 @@ let encoded encode cmode msg digest =
   | HEX -> decide cmode (Cstruct.to_string(dimsg msg digest)) digest
   | BINARY -> savefile outfile (tobinary msg)
 
+let checkkey key =
+  match key with
+  | "NA" -> failwith "no key entered"
+  | _ -> key
+
 let dgst digestmode encode c hmac key outfile infile =
   encoded encode c (readfile infile) digestmode;
-  print_endline (Cstruct.to_string (gethmac (Cstruct.of_string key) (readfile infile) digestmode))
+  print_endline (Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode))
 
 
 
 (*commandline interface*)
 
-let digest = 
+let digestmode = 
   let doc = "MD5 hash function" in
   let md5 = MD5, Arg.info ["md5"] ~doc in
   let doc = "SHA1 hash function" in
@@ -91,7 +96,6 @@ let digest =
   let sha512 = SHA512, Arg. info["sha512"] ~doc in
   Arg.(last & vflag_all [MD5] [md5; sha1; sha224; sha384; sha512])
 
-
 let encode =
   let doc = "No encoding" in
   let none = NOENCODE, Arg.info["noenc"] ~doc in
@@ -99,4 +103,32 @@ let encode =
   let hex = HEX, Arg.info["hex"] ~doc in
   let doc = "Binary encoding" in
   let binary = BINARY, Arg.info ["binary"] ~doc in
-  Arg.(non_empty & vflag_all [NOENCODE] [none; hex; binary])
+  Arg.(last & vflag_all [NOENCODE] [hex; binary; none])
+
+let c =
+  let doc = "print out digest in 2 digit groups separated by semicolon if hex encoded" in
+  let cen = CEn, Arg.info ["c"] ~doc in
+  let doc = "no separate" in
+  let cdi = CDi, Arg.info ["noc"] ~doc in
+  Arg.(last & vflag_all [CDi] [cen; cdi])
+
+let hmac =
+  let doc = "hmac" in
+  Arg.(value & flag & info ["hmac"] ~doc)
+
+let key =
+  let doc = "key" in
+  Arg.(value & opt string "NA" & info ["k"; "key"] ~doc)
+
+let dgst_t = Term.(pure dgst $ digestmode $ encode $ c $ hmac $ key $ outfile $ infile)
+
+let info =
+  let doc = "DGST" in
+  let man = [`S "BUG";
+  `P "submit via github";] in
+  Term.info "rand" ~version:"0.0.1" ~doc ~man
+
+let () = match Term.eval (dgst_t, info) with 
+`Error _ -> exit 1 | _ -> exit 0
+
+
