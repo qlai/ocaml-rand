@@ -15,6 +15,15 @@ type enc =
 type cmode =
   | CEn | CDi
 
+let finddimode digest =
+  match digest with 
+  |MD5 -> "MD5"
+  |SHA1 -> "SHA1"
+  |SHA224 -> "SHA224"
+  |SHA256 -> "SHA256"
+  |SHA384 -> "SHA384"
+  |SHA512 -> "SHA512" 
+  
 let cdisp somehex =
   let addsemi somelist = 
     let rec aux count acc = function
@@ -43,9 +52,9 @@ let dimsg msg digest = (*initialisation might be required*)
   | SHA384 -> SHA384.digest (Cstruct.of_string msg)            
   | SHA512 -> SHA512.digest (Cstruct.of_string msg)
   
-let decide cmode msg digest outfile= 
+let decide cmode msg = 
   match cmode with
-  | CEn -> savefile outfile (cdisp (Hex.of_cstruct (dimsg msg digest)))
+  | CEn -> cdisp (Hex.of_cstruct (dimsg msg digest))
   | CDi -> Hex.hexdump (Hex.of_cstruct (dimsg msg digest))
   
 let gethmac key msg digest= 
@@ -57,32 +66,38 @@ let gethmac key msg digest=
   | SHA384 -> SHA384.hmac key (Cstruct.of_string msg)
   | SHA512 -> SHA512.hmac key (Cstruct.of_string msg)
 
-let encoded encode cmode msg digest outfile= 
+let encoded encode cmode msg digest = 
   match encode with
-  | NOENCODE -> savefile outfile (Cstruct.to_string (dimsg msg digest))
-  | HEX -> decide cmode (Cstruct.to_string(dimsg msg digest)) digest outfile
-  | BINARY -> savefile outfile (tobinary msg)
+  | NOENCODE -> Cstruct.to_string (dimsg msg digest)
+  | HEX -> decide cmode (Cstruct.to_string(dimsg msg digest)) digest
+  | BINARY -> tobinary msg
 
-let coreutilsformat file digest = 
-  let finddimode =
-    match digest with 
-    |MD5 -> "MD5"
-    |SHA1 -> "SHA1"
-    |SHA224 -> "SHA224"
-    |SHA256 -> "SHA256"
-    |SHA384 -> "SHA384"
-    |SHA512 -> "SHA512" in
-  print_endline (finddimode^"("^(file)^")="^(Cstruct.to_string(dimsg (readfile file) digest)))
-
+let afterdigest infile digest msg= 
+  (finddimode digest)^"("^(infile)^")="^msg
+  
+let coreutils infile msg = 
+  msg^infile
+  
+let hmacformat infile digest msg =
+  "HMAC"^(filedimode digest)^"("^(filename)^")="^msg
+  
 let checkkey key =
   match key with
   | "NA" -> failwith "no key entered"
   | _ -> key
 
 let dgst digestmode encode c r hmac key outfile infile =
-  if outfile = "outfile.txt" then () else encoded encode c (readfile infile) digestmode outfile;
-  print_endline (Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode));
-  if r = true then coreutilsformat infile digestmode else ()
+  let msgdigested = if hmac = true 
+  then Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode 
+  else encoded encode c (readfile infile) digestmode in
+  if outfile != "NA" then savefile outfile else ();
+  if hmac = true
+  then print_endline (hmacformat infile digestmode msgdigested)
+  else 
+    if r = true 
+    then print_endline (coreutils infile msgdigested)
+    else print_endline (afterdigest infile digestmode msgdigested)
+
 
   (*commandline interface*)
 
