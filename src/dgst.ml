@@ -10,10 +10,7 @@ type digest =
   | MD5 | SHA1 | SHA224 | SHA256 | SHA384 | SHA512
 
 type enc =
-  | HEX | BINARY | NOENCODE
-
-type cmode =
-  | CEn | CDi
+  | HEX | BINARY
 
 let finddimode digest =
   match digest with 
@@ -24,7 +21,7 @@ let finddimode digest =
   |SHA384 -> "SHA384"
   |SHA512 -> "SHA512" 
   
-let cdisp somehex =
+let cdisp cmode somehex =
   let addsemi somelist = 
     let rec aux count acc = function
     |[] -> acc
@@ -34,8 +31,10 @@ let cdisp somehex =
     List.rev(aux 0 [] somelist) in
   let tostring =
     match somehex with | `Hex(str) -> str | _ -> failwith "not Hex.t" in
-  ExtLib.String.implode (addsemi (ExtLib.String.explode tostring))
-
+  if cmode = true 
+  then ExtLib.String.implode (addsemi (ExtLib.String.explode tostring))
+  else tostring
+  
 let tobinary str =
   let rec strip_bits i s =
     match i with
@@ -52,11 +51,6 @@ let dimsg msg digest = (*initialisation might be required*)
   | SHA384 -> SHA384.digest (Cstruct.of_string msg)            
   | SHA512 -> SHA512.digest (Cstruct.of_string msg)
   
-let decide cmode msg = 
-  match cmode with
-  | CEn -> cdisp (Hex.of_cstruct (dimsg msg digest))
-  | CDi -> Hex.hexdump (Hex.of_cstruct (dimsg msg digest))
-  
 let gethmac key msg digest= 
   match digest with
   | MD5 -> MD5.hmac key (Cstruct.of_string msg)
@@ -68,8 +62,7 @@ let gethmac key msg digest=
 
 let encoded encode cmode msg digest = 
   match encode with
-  | NOENCODE -> Cstruct.to_string (dimsg msg digest)
-  | HEX -> decide cmode (Cstruct.to_string(dimsg msg digest)) digest
+  | HEX -> cdisp cmode (Hex.of_cstruct (dimsg msg digest))
   | BINARY -> tobinary msg
 
 let afterdigest infile digest msg= 
@@ -79,7 +72,7 @@ let coreutils infile msg =
   msg^infile
   
 let hmacformat infile digest msg =
-  "HMAC"^(filedimode digest)^"("^(filename)^")="^msg
+  "HMAC"^(finddimode digest)^"("^(infile)^")="^msg
   
 let checkkey key =
   match key with
@@ -88,9 +81,9 @@ let checkkey key =
 
 let dgst digestmode encode c r hmac key outfile infile =
   let msgdigested = if hmac = true 
-  then Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode 
+  then Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode) 
   else encoded encode c (readfile infile) digestmode in
-  if outfile != "NA" then savefile outfile else ();
+  if outfile != "NA" then savefile outfile msgdigested else ();
   if hmac = true
   then print_endline (hmacformat infile digestmode msgdigested)
   else 
@@ -115,20 +108,15 @@ let digestmode =
   Arg.(last & vflag_all [MD5] [md5; sha1; sha224; sha384; sha512])
 
 let encode =
-  let doc = "No encoding" in
-  let none = NOENCODE, Arg.info["noenc"] ~doc in
   let doc = "Hex encoding" in
   let hex = HEX, Arg.info["hex"] ~doc in
   let doc = "Binary encoding" in
   let binary = BINARY, Arg.info ["binary"] ~doc in
-  Arg.(last & vflag_all [NOENCODE] [hex; binary; none])
+  Arg.(last & vflag_all [HEX] [binary; hex])
 
 let c =
   let doc = "print out digest in 2 digit groups separated by semicolon if hex encoded" in
-  let cen = CEn, Arg.info ["c"] ~doc in
-  let doc = "no separate" in
-  let cdi = CDi, Arg.info ["noc"] ~doc in
-  Arg.(last & vflag_all [CDi] [cen; cdi])
+  Arg.(value & flag & info ["c"] ~doc)
 
 let r =
   let doc = "output in coreutils format" in
