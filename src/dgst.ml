@@ -20,7 +20,7 @@ let cdisp somehex =
     let rec aux count acc = function
     |[] -> acc
     | hd :: tl -> if count = 2 
-                  then aux 0 (';'::acc) (hd::tl) 
+                  then aux 0 (':'::acc) (hd::tl) 
                   else aux (count + 1) (hd::acc) tl in
     List.rev(aux 0 [] somelist) in
   let tostring =
@@ -63,18 +63,28 @@ let encoded encode cmode msg digest outfile=
   | HEX -> decide cmode (Cstruct.to_string(dimsg msg digest)) digest outfile
   | BINARY -> savefile outfile (tobinary msg)
 
+let coreutilsformat file digest = 
+  let finddimode =
+    match digest with 
+    |MD5 -> "MD5"
+    |SHA1 -> "SHA1"
+    |SHA224 -> "SHA224"
+    |SHA256 -> "SHA256"
+    |SHA384 -> "SHA384"
+    |SHA512 -> "SHA512" in
+  print_endline (finddimode^"("^(file)^")="^(Cstruct.to_string(dimsg (readfile file) digest)))
+
 let checkkey key =
   match key with
   | "NA" -> failwith "no key entered"
   | _ -> key
 
-let dgst digestmode encode c hmac key outfile infile =
-  encoded encode c (readfile infile) digestmode outfile;
-  print_endline (Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode))
+let dgst digestmode encode c r hmac key outfile infile =
+  if outfile = "outfile.txt" then () else encoded encode c (readfile infile) digestmode outfile;
+  print_endline (Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode));
+  if r = true then coreutilsformat infile digestmode else ()
 
-
-
-(*commandline interface*)
+  (*commandline interface*)
 
 let digestmode = 
   let doc = "MD5 hash function" in
@@ -105,6 +115,10 @@ let c =
   let cdi = CDi, Arg.info ["noc"] ~doc in
   Arg.(last & vflag_all [CDi] [cen; cdi])
 
+let r =
+  let doc = "output in coreutils format" in
+  Arg.(value & flag & info ["r"] ~doc)
+
 let hmac =
   let doc = "hmac" in
   Arg.(value & flag & info ["hmac"] ~doc)
@@ -117,8 +131,8 @@ let cmd =
   let doc = "DGST" in
   let man = [`S "BUG";
   `P "submit via github";] in
-  Term.(pure dgst $ digestmode $ encode $ c $ hmac $ key $ outfile $ infile),
-  Term.info "rand" ~version:"0.0.1" ~doc ~man
+  Term.(pure dgst $ digestmode $ encode $ c $ r $ hmac $ key $ outfile $ infile),
+  Term.info "dgst" ~version:"0.0.1" ~doc ~man
 
 let () = match Term.eval cmd with 
 `Error _ -> exit 1 | _ -> exit 0
