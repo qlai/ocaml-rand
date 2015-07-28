@@ -35,13 +35,6 @@ let cdisp cmode somehex =
   then ExtLib.String.implode (addsemi (ExtLib.String.explode tostring))
   else tostring
   
-let tobinary str =
-  let rec strip_bits i s =
-    match i with
-    |0 -> s
-    |_ -> strip_bits (i lsr 1) ((string_of_int (i land 0x01)) ^ s) in
-  strip_bits (int_of_string str) ""
-
 let dimsg msg digest = (*initialisation might be required*)
   match digest with 
   | MD5 -> MD5.digest (Cstruct.of_string msg)
@@ -51,19 +44,22 @@ let dimsg msg digest = (*initialisation might be required*)
   | SHA384 -> SHA384.digest (Cstruct.of_string msg)            
   | SHA512 -> SHA512.digest (Cstruct.of_string msg)
   
-let gethmac key msg digest= 
-  match digest with
+let gethmac key msg digest encode cmode = 
+  let hmacmsg = match digest with
   | MD5 -> MD5.hmac key (Cstruct.of_string msg)
   | SHA1 -> SHA1.hmac key (Cstruct.of_string msg)
   | SHA224 -> SHA224.hmac key (Cstruct.of_string msg)
   | SHA256 -> SHA256.hmac key (Cstruct.of_string msg)
   | SHA384 -> SHA384.hmac key (Cstruct.of_string msg)
-  | SHA512 -> SHA512.hmac key (Cstruct.of_string msg)
+  | SHA512 -> SHA512.hmac key (Cstruct.of_string msg) in
+  match encode with
+  | HEX -> cdisp cmode (Hex.of_cstruct hmacmsg)
+  | BINARY -> Cstruct.to_string hmacmsg
 
 let encoded encode cmode msg digest = 
   match encode with
   | HEX -> cdisp cmode (Hex.of_cstruct (dimsg msg digest))
-  | BINARY -> tobinary msg
+  | BINARY -> Cstruct.to_string (dimsg msg digest)
 
 let afterdigest infile digest msg= 
   (finddimode digest)^"("^(infile)^")="^msg
@@ -81,7 +77,7 @@ let checkkey key =
 
 let dgst digestmode encode c r hmac key outfile infile =
   let msgdigested = if hmac = true 
-  then Cstruct.to_string (gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode) 
+  then gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode encode c
   else encoded encode c (readfile infile) digestmode in
   if outfile != "NA" then savefile outfile msgdigested else ();
   if hmac = true
