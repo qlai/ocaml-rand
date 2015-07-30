@@ -69,3 +69,26 @@ let info =
 let () = match Term.eval (rand_t, info) with
 `Error _ -> exit 1 | _ -> exit 0
 
+(*
+
+open Nocrypto
+
+let gen_with param n =
+  let g = Rng.create (module Rng.Generator.Fortuna) in
+  ( match param with
+    | `File name ->
+        let content = (* read file *) in
+        Rng.reseed ~g content
+    | `Auto -> Nocrypto_entropy_unix.reseed g ) ;
+  Rng.generate ~g n
+
+
+let gen_with param n =
+  ( match param with
+    | `File name ->
+        let content = (* read file *) in
+        Rng.reseed ~g:!Rng.generator content
+    | `Auto -> Nocrypto_entropy_unix.reseed !Rng.generator ) ;
+  Rng.generate n
+
+*)
