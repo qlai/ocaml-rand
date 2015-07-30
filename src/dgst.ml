@@ -14,12 +14,12 @@ type enc =
 
 let finddimode digest =
   match digest with 
-  |MD5 -> "MD5"
-  |SHA1 -> "SHA1"
-  |SHA224 -> "SHA224"
-  |SHA256 -> "SHA256"
-  |SHA384 -> "SHA384"
-  |SHA512 -> "SHA512" 
+  | MD5 -> "MD5"
+  | SHA1 -> "SHA1"
+  | SHA224 -> "SHA224"
+  | SHA256 -> "SHA256"
+  | SHA384 -> "SHA384"
+  | SHA512 -> "SHA512" 
   
 let cdisp cmode somehex =
   let addsemi somelist = 
@@ -62,13 +62,13 @@ let encoded encode cmode msg digest =
   | BINARY -> Cstruct.to_string (dimsg msg digest)
 
 let afterdigest infile digest msg= 
-  (finddimode digest)^"("^(infile)^")="^msg
+  (finddimode digest)^"("^(infile)^")= "^msg
   
 let coreutils infile msg = 
   msg^" *"^infile
   
 let hmacformat infile digest msg =
-  "HMAC"^(finddimode digest)^"("^(infile)^")="^msg
+  "HMAC-"^(finddimode digest)^"("^(infile)^")= "^msg
   
 let checkkey key =
   match key with
