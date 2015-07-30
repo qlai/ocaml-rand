@@ -65,7 +65,7 @@ let afterdigest infile digest msg=
   (finddimode digest)^"("^(infile)^")="^msg
   
 let coreutils infile msg = 
-  msg^infile
+  msg^" *"^infile
   
 let hmacformat infile digest msg =
   "HMAC"^(finddimode digest)^"("^(infile)^")="^msg
