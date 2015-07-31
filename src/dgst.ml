@@ -83,7 +83,7 @@ let dgst digestmode encode c r hmac key outfile infile =
   if hmac = true
   then print_endline (hmacformat infile digestmode msgdigested)
   else 
-    if r = true 
+    if r = true  && c = false 
     then print_endline (coreutils infile msgdigested)
     else print_endline (afterdigest infile digestmode msgdigested)
 
