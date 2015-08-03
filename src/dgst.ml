@@ -74,9 +74,9 @@ let checkkey key =
   | "NA" -> failwith "no key entered"
   | _ -> key
 
-let dgst digestmode encode c r hmac key outfile infile =
-  let msgdigested = if hmac = true 
-  then gethmac (Cstruct.of_string (checkkey key)) (readfile infile) digestmode encode c
+let dgst digestmode encode c r hmackey outfile infile =
+  let msgdigested = if hmackey != "NA" 
+  then gethmac (Cstruct.of_string (checkkey hmackey)) (readfile infile) digestmode encode c
   else encoded encode c (readfile infile) digestmode in
   if outfile != "NA" then savefile outfile msgdigested else ();
   if hmac = true
@@ -117,13 +117,9 @@ let r =
   let doc = "output in coreutils format" in
   Arg.(value & flag & info ["r"] ~doc)
 
-let hmac =
-  let doc = "hmac" in
-  Arg.(value & flag & info ["hmac"] ~doc)
-
 let key =
-  let doc = "key" in
-  Arg.(value & opt string "NA" & info ["k"; "key"] ~doc)
+  let doc = "flag this if hmac required and enter your key" in
+  Arg.(value & opt string "NA" & info ["k"; "h"; "hmac"; "key"] ~doc)
 
 let cmd = 
   let doc = "DGST" in
