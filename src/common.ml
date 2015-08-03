@@ -16,7 +16,7 @@ let explode s =
   expl (String.length s - 1) [];;
 
 let implode l =
-  let result = String.create (List.length l) in
+  let result = Bytes .create (List.length l) in
   let rec imp i = function
   | [] -> result
   | c :: l -> result.[i] <- c; imp (i + 1) l in
