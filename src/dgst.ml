@@ -79,7 +79,7 @@ let dgst digestmode encode c r hmackey outfile infile =
   then gethmac (Cstruct.of_string (checkkey hmackey)) (readfile infile) digestmode encode c
   else encoded encode c (readfile infile) digestmode in
   if outfile != "NA" then savefile outfile msgdigested else ();
-  if hmac = true
+  if hmackey != "NA"
   then print_endline (hmacformat infile digestmode msgdigested)
   else 
     if r = true  && c = false 
@@ -117,7 +117,7 @@ let r =
   let doc = "output in coreutils format" in
   Arg.(value & flag & info ["r"] ~doc)
 
-let key =
+let hmackey =
   let doc = "flag this if hmac required and enter your key" in
   Arg.(value & opt string "NA" & info ["k"; "h"; "hmac"; "key"] ~doc)
 
@@ -125,7 +125,7 @@ let cmd =
   let doc = "DGST" in
   let man = [`S "BUG";
   `P "submit via github";] in
-  Term.(pure dgst $ digestmode $ encode $ c $ r $ hmac $ key $ outfile $ infile),
+  Term.(pure dgst $ digestmode $ encode $ c $ r $ hmackey $ outfile $ infile),
   Term.info "dgst" ~version:"0.0.1" ~doc ~man
 
 let () = match Term.eval cmd with 
