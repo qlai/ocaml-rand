@@ -2,7 +2,6 @@ open Cmdliner
 open Common
 open Nocrypto
 open Hash
-open ExtLib
 
 (*need function to choose digests*)
 
@@ -32,7 +31,7 @@ let cdisp cmode somehex =
   let tostring =
     match somehex with | `Hex(str) -> str | _ -> failwith "not Hex.t" in
   if cmode = true 
-  then ExtLib.String.implode (addsemi (ExtLib.String.explode tostring))
+  then implode (addsemi (explode tostring))
   else tostring
   
 let dimsg msg digest = (*initialisation might be required*)
