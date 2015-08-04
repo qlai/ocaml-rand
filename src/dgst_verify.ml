@@ -21,7 +21,7 @@ let encryptmsg keyfile msg =
   
 let decryptingciph keyfile msg =
   let key = Encoding.Pem.Private_key.of_pem_cstruct (load keyfile) in 
-  let decrmsg = Rsa.PKCS.decrypt ~key:key msg in
+  let decrmsg = Rsa.PKCS1.decrypt ~key:key msg in
   match decrmsg with
     | None -> failwish "no match"
     | Some x -> x
