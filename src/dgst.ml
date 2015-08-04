@@ -122,7 +122,7 @@ let hmackey =
   Arg.(value & opt string "NA" & info ["k"; "h"; "hmac"; "key"] ~doc)
 
 let cmd = 
-  let doc = "DGST" in
+  let doc = "DGST: default function is MD5" in
   let man = [`S "BUG";
   `P "submit via github";] in
   Term.(pure dgst $ digestmode $ encode $ c $ r $ hmackey $ outfile $ infile),

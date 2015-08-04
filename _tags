@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 5bd34d29ff1c4dcd85cf48e39937bf66)
+# DO NOT EDIT (digest: fc06b4d06f5ab08a3d8fec0c3ac59656)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -21,12 +21,26 @@ true: annot, bin_annot
 "src/rand.byte": pkg_hex
 "src/rand.byte": pkg_nocrypto
 "src/rand.byte": pkg_nocrypto.unix
+# Executable dgst
+"src/dgst.byte": pkg_cmdliner
+"src/dgst.byte": pkg_cstruct
+"src/dgst.byte": pkg_extlib
+"src/dgst.byte": pkg_hex
+"src/dgst.byte": pkg_nocrypto
+"src/dgst.byte": pkg_nocrypto.unix
+"src/dgst.byte": pkg_x509
+<src/*.ml{,i,y}>: pkg_cstruct
+<src/*.ml{,i,y}>: pkg_extlib
+<src/*.ml{,i,y}>: pkg_hex
 # Executable ciphers
 "src/ciphers.byte": pkg_cmdliner
 "src/ciphers.byte": pkg_nocrypto
 "src/ciphers.byte": pkg_nocrypto.unix
 "src/ciphers.byte": pkg_tls
 "src/ciphers.byte": pkg_x509
+<src/*.ml{,i,y}>: pkg_cmdliner
+<src/*.ml{,i,y}>: pkg_nocrypto
+<src/*.ml{,i,y}>: pkg_nocrypto.unix
 <src/*.ml{,i,y}>: pkg_tls
 <src/*.ml{,i,y}>: pkg_x509
 # Executable base64
@@ -59,22 +73,15 @@ true: annot, bin_annot
 "src/encode/aes_gcm.byte": pkg_extlib
 "src/encode/aes_gcm.byte": pkg_nocrypto
 "src/encode/aes_gcm.byte": pkg_nocrypto.unix
+# Executable aesctr
+"src/encode/aes_ctr.byte": pkg_cmdliner
+"src/encode/aes_ctr.byte": pkg_cstruct
+"src/encode/aes_ctr.byte": pkg_extlib
+"src/encode/aes_ctr.byte": pkg_nocrypto
+"src/encode/aes_ctr.byte": pkg_nocrypto.unix
 <src/encode/*.ml{,i,y}>: pkg_cmdliner
 <src/encode/*.ml{,i,y}>: pkg_cstruct
 <src/encode/*.ml{,i,y}>: pkg_extlib
 <src/encode/*.ml{,i,y}>: pkg_nocrypto
 <src/encode/*.ml{,i,y}>: pkg_nocrypto.unix
-# Executable aesctr
-"src/dgst.byte": pkg_cmdliner
-"src/dgst.byte": pkg_cstruct
-"src/dgst.byte": pkg_extlib
-"src/dgst.byte": pkg_hex
-"src/dgst.byte": pkg_nocrypto
-"src/dgst.byte": pkg_nocrypto.unix
-<src/*.ml{,i,y}>: pkg_cmdliner
-<src/*.ml{,i,y}>: pkg_cstruct
-<src/*.ml{,i,y}>: pkg_extlib
-<src/*.ml{,i,y}>: pkg_hex
-<src/*.ml{,i,y}>: pkg_nocrypto
-<src/*.ml{,i,y}>: pkg_nocrypto.unix
 # OASIS_STOP
