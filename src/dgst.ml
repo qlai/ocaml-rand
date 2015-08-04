@@ -74,7 +74,7 @@ let checkkey key =
   | "NA" -> failwith "no key entered"
   | _ -> key
 
-let dgst digestmode encode c r hmackey outfile infile =
+let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
   let msgdigested = if hmackey != "NA" 
   then gethmac (Cstruct.of_string (checkkey hmackey)) (readfile infile) digestmode encode c
   else encoded encode c (readfile infile) digestmode in
@@ -84,9 +84,16 @@ let dgst digestmode encode c r hmackey outfile infile =
   else 
     if r = true  && c = false 
     then print_endline (coreutils infile msgdigested)
-    else print_endline (afterdigest infile digestmode msgdigested)
-
-
+    else print_endline (afterdigest infile digestmode msgdigested);
+(*need to figure out how to deal with signing parts*)
+  if sign != "NA" then sigencode sign msgdigested
+  else 
+    if signature != "NA" then match verify, prverify with 
+      | "NA", _ -> 
+      | _ , "NA" ->
+      | _ , _ | "NA", "NA" -> failwith "verification mode clash/ choose verification mode"
+    else print_endline "Finished digest, no signing/verification called"
+    
   (*commandline interface*)
 
 let digestmode = 
@@ -120,12 +127,28 @@ let r =
 let hmackey =
   let doc = "flag this if hmac required and enter your key" in
   Arg.(value & opt string "NA" & info ["k"; "h"; "hmac"; "key"] ~doc)
+  
+let sign =
+  let doc = "sign digest with private key in file; flag and enter filename (PEM)" in 
+  Arg.(value & opt string "NA" & info ["sign"] ~doc)
+  
+let verify =
+  let doc = "verify signature with public key in file; flag and enter filename (PEM)" in 
+  Arg.(value & opt string "NA" & info ["verify"] ~doc)
+  
+let prverify =
+  let doc = "verify signature with private key in file; flag and enter filename (PEM)" in
+  Arg.(value & opt string "NA" & info ["prverify"] ~doc)
+  
+let signature =
+  let doc = "actual signature to be verified" in 
+  Arg.(value & opt string "NA" & info ["signature"] ~doc)
 
 let cmd = 
   let doc = "DGST: default function is MD5" in
   let man = [`S "BUG";
   `P "submit via github";] in
-  Term.(pure dgst $ digestmode $ encode $ c $ r $ hmackey $ outfile $ infile),
+  Term.(pure dgst $ digestmode $ encode $ c $ r $ hmackey $ outfile $ infile & sign & verify & prverify & signature),
   Term.info "dgst" ~version:"0.0.1" ~doc ~man
 
 let () = match Term.eval cmd with 
