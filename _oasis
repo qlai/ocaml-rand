@@ -18,13 +18,7 @@ Executable dgst
   Install: true
   Path: src/
   MainIs: dgst.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct, hex, x509
-
-Executable ciphers
-  Install: true
-  Path: src/
-  MainIs: ciphers.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, tls, x509
+  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct, cstruct.unix, hex, x509, unix
 
 Executable base64
   Install: true
