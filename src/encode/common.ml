@@ -1,6 +1,9 @@
 open Cmdliner
 open Nocrypto
 
+type encode =
+  | E | D
+
 let savefile afile thingtobesaved =
     let channel = open_out afile in
       output_string channel thingtobesaved;
@@ -19,8 +22,11 @@ let createiv ivfile =
   | _ -> (*TODO: seed rng from this file*) Cstruct.of_string (readfile ivfile)
   
 let encode =
-  let doc = "E or D" in
-  Arg.(value & pos 0 string "E" & info [] ~doc)
+  let doc = "encoding" in
+  let e = E, Arg.info ["e"] ~doc in
+  let doc = "decoding" in 
+  let d = D, Arg.info ["d"] ~doc in 
+  Arg.(last & vflag_all [E] [d; e])
   
 let nobits =
   let doc = "number of bits" in

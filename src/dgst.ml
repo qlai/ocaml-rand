@@ -2,8 +2,10 @@ open Cmdliner
 open Common
 open Nocrypto
 open Hash
+open Dgst_verify
 
 (*need function to choose digests*)
+exception Do_nothing
 
 type digest = 
   | MD5 | SHA1 | SHA224 | SHA256 | SHA384 | SHA512
@@ -86,14 +88,13 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
     then print_endline (coreutils infile msgdigested)
     else print_endline (afterdigest infile digestmode msgdigested);
 (*need to figure out how to deal with signing parts*)
-  if sign != "NA" then sigencode sign msgdigested
-  else 
-    if signature != "NA" then match verify, prverify with 
-      | "NA", _ -> 
-      | _ , "NA" ->
-      | _ , _ | "NA", "NA" -> failwith "verification mode clash/ choose verification mode"
-    else print_endline "Finished digest, no signing/verification called"
-    
+  if sign != "NA" then sigencode sign (Cstruct.of_string msgdigested)
+  else if signature != "NA" then match verify, prverify with
+    | x, "NA" -> sigdecode x (load signature) 
+    | "NA", x -> sigdecode x (load signature)
+    | _, _ -> failwith "verification mode clash/ choose verification mode"
+  else raise Do_nothing 
+
   (*commandline interface*)
 
 let digestmode = 
@@ -148,7 +149,7 @@ let cmd =
   let doc = "DGST: default function is MD5" in
   let man = [`S "BUG";
   `P "submit via github";] in
-  Term.(pure dgst $ digestmode $ encode $ c $ r $ hmackey $ outfile $ infile & sign & verify & prverify & signature),
+  Term.(pure dgst $ digestmode $ encode $ c $ r $ hmackey $ outfile $ infile $ sign $ verify $ prverify $ signature),
   Term.info "dgst" ~version:"0.0.1" ~doc ~man
 
 let () = match Term.eval cmd with 
