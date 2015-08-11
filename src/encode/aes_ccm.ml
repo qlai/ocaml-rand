@@ -18,11 +18,10 @@ let aesccm encode yourkey keyfile adata infile outfile =
   let nonce = Rng.generate 10 in
   let coding = 
   match encode, adata with 
-  | "E", "NA" -> Some(AES.CCM.encrypt ~key:key ~nonce:nonce (Cstruct.of_string(padding(readfile infile))))
-  | "D", "NA" -> AES.CCM.decrypt ~key:key ~nonce:nonce (Cstruct.of_string(padding(readfile infile)))
-  | "E", _  -> Some(AES.CCM.encrypt ~key:key ~nonce:nonce ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile))))
-  | "D", _ -> AES.CCM.decrypt ~key:key ~nonce:nonce ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile)))
-  | _ -> failwith "please enter E or D" in
+  | E, "NA" -> Some(AES.CCM.encrypt ~key:key ~nonce:nonce (Cstruct.of_string(padding(readfile infile))))
+  | D, "NA" -> AES.CCM.decrypt ~key:key ~nonce:nonce (Cstruct.of_string(padding(readfile infile)))
+  | E, _  -> Some(AES.CCM.encrypt ~key:key ~nonce:nonce ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile))))
+  | D, _ -> AES.CCM.decrypt ~key:key ~nonce:nonce ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile))) in
   match coding with
   | None -> failwith "nooutput"
   | Some(coding) -> savefile outfile (Cstruct.to_string coding)

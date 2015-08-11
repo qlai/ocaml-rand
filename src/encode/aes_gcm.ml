@@ -20,11 +20,10 @@ let aesgcm encode yourkey keyfile ivfile adata infile outfile =
     else createiv getkey in
   let result = 
   match encode, adata with 
-  | "E", "NA" -> AES.GCM.encrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
-  | "D", "NA" ->AES.GCM.decrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
-  | "E", _ -> AES.GCM.encrypt ~key:key ~iv:iv ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile)))
-  | "D", _ -> AES.GCM.decrypt ~key:key  ~iv:iv ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile)))
-  | _ -> failwith "please enter E or D" in
+  | E, "NA" -> AES.GCM.encrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
+  | D, "NA" ->AES.GCM.decrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
+  | E, _ -> AES.GCM.encrypt ~key:key ~iv:iv ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile)))
+  | D, _ -> AES.GCM.decrypt ~key:key  ~iv:iv ~adata:(Cstruct.of_string(adata)) (Cstruct.of_string(padding(readfile infile))) in
   let coding = match result with
   | {Nocrypto.Cipher_block.AES.GCM.message = x; tag = y} -> Cstruct.to_string x in
 savefile outfile coding (*TODO: decide what to do with tag*)

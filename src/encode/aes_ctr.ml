@@ -17,11 +17,10 @@ let aesctr encode yourkey keyfile counter offset infile outfile =
   let ctr = Rng.generate counter in
   let coding = 
   match encode, offset with 
-  | "E", 0 -> AES.CTR.encrypt ~key:key ~ctr:ctr (Cstruct.of_string(padding(readfile infile)))
-  | "D", 0 ->  AES.CTR.decrypt ~key:key ~ctr:ctr (Cstruct.of_string(padding(readfile infile)))
-  | "E", _ -> AES.CTR.encrypt ~key:key ~ctr:ctr ~off:offset (Cstruct.of_string(padding(readfile infile)))
-  | "D", _ -> AES.CTR.decrypt ~key:key ~ctr:ctr ~off:offset (Cstruct.of_string(padding(readfile infile)))
-  | _ -> failwith "please enter E or D" in
+  | E, 0 -> AES.CTR.encrypt ~key:key ~ctr:ctr (Cstruct.of_string(padding(readfile infile)))
+  | D, 0 ->  AES.CTR.decrypt ~key:key ~ctr:ctr (Cstruct.of_string(padding(readfile infile)))
+  | E, _ -> AES.CTR.encrypt ~key:key ~ctr:ctr ~off:offset (Cstruct.of_string(padding(readfile infile)))
+  | D, _ -> AES.CTR.decrypt ~key:key ~ctr:ctr ~off:offset (Cstruct.of_string(padding(readfile infile))) in
 savefile outfile (Cstruct.to_string coding)
 
   (*commandline interface start here*)

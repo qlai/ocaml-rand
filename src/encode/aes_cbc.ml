@@ -16,9 +16,8 @@ let aescbc encode yourkey keyfile ivfile infile outfile =
   let iv = if ivfile != "NA" then createiv ivfile else createiv getkey in
   let key = (padding getkey) |> Cstruct.of_string |> AES.CBC.of_secret in
   let coding = match encode with 
-  | "E" -> AES.CBC.encrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
-  | "D" -> AES.CBC.decrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
-  | _ -> failwith "please enter E or D" in
+  | E -> AES.CBC.encrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile)))
+  | D -> AES.CBC.decrypt ~key:key ~iv:iv (Cstruct.of_string(padding(readfile infile))) in
 savefile outfile (Cstruct.to_string coding)
 
   (*commandline interface start here*)

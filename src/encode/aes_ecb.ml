@@ -15,9 +15,8 @@ let aesecb encode yourkey keyfile infile outfile =
   | _ -> readfile keyfile in
   let key = (padding getkey) |> Cstruct.of_string |> AES.ECB.of_secret in
   let coding = match encode with 
-  | "E" -> AES.ECB.encrypt ~key:key (Cstruct.of_string(padding(readfile infile)))
-  | "D" -> AES.ECB.decrypt ~key:key (Cstruct.of_string(padding(readfile infile)))
-  | _ -> failwith "please enter E or D" in
+  | E -> AES.ECB.encrypt ~key:key (Cstruct.of_string(padding(readfile infile)))
+  | D -> AES.ECB.decrypt ~key:key (Cstruct.of_string(padding(readfile infile))) in
 savefile outfile (Cstruct.to_string coding)
 
   (*commandline interface start here*)
