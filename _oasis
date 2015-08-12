@@ -1,78 +1,78 @@
-OASISFormat: 0.4
-BuildTools: ocamlbuild
-Name: Ocaml-Rand
-Version: 0.1
-Synopsis: from OpenSSL cmd
-Authors: QLai
-License: ISC
-Description: see synopsis.
-Plugins: META(0.4), DevFiles (0.4)
+OASISFormat:       0.4
+BuildTools:        ocamlbuild
+Name:              Ocaml-Rand
+Version:           0.1
+Synopsis:          from OpenSSL cmd
+Authors:           QLai
+License:           ISC
+Description:       see synopsis.
+Plugins:           META(0.4), DevFiles (0.4)
 
 Executable rand
-  Install: true
-  Path: src/
-  MainIs: rand.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, hex, extlib, cstruct
+  Install:         true
+  Path:            src/
+  MainIs:          rand.ml
+  BuildDepends:   nocrypto, nocrypto.unix, cmdliner, hex, extlib, cstruct
   
 Executable dgst
-  Install: true
-  Path: src/
-  MainIs: dgst.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct, cstruct.unix, hex, x509, unix
+  Install:         true
+  Path:            src/
+  MainIs:          dgst.ml
+  BuildDepends:    nocrypto, nocrypto.unix, cmdliner, extlib, cstruct, cstruct.unix, hex, x509, unix
 
 Executable base64
-  Install: true
-  Path: src/encode
-  MainIs: base64enc.ml
-  BuildDepends:nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+  Install:         true
+  Path:            src/encode
+  MainIs:          base64enc.ml
+  BuildDepends:    nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 Executable aescbc
-  Install: true
-  Path: src/encode
-  MainIs: aes_cbc.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+  Install:         true
+  Path:            src/encode
+  MainIs:          aes_cbc.ml
+  BuildDepends:    nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 #Executable aesecb
-#  Install: true
-#  Path: src/encode
-#  MainIs: aes_ecb.ml
-#  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+#  Install:        true
+#  Path:           src/encode
+#  MainIs:         aes_ecb.ml
+#  BuildDepends:   nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 #Executable aesccm
-#  Install: true
-#  Path: src/encode
-#  MainIs: aes_ccm.ml
-#  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+#  Install:        true
+#  Path:           src/encode
+#  MainIs:         aes_ccm.ml
+#  BuildDepends:   nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 #Executable aesgcm
-#  Install: true
-#  Path: src/encode
-#  MainIs: aes_gcm.ml
-#  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+#  Install:        true
+#  Path:           src/encode
+#  MainIs:         aes_gcm.ml
+#  BuildDepends:   nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
   
 Executable aesctr
-  Install: true
-  Path: src/encode
-  MainIs: aes_ctr.ml
-  BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+  Install:         true
+  Path:            src/encode
+  MainIs:          aes_ctr.ml
+  BuildDepends:    nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 
 Library testlib
-  Path: tests/
-  Modules: dgst_tests.ml, base64_tests.ml
-  Install: false
-  Build$: flag(tests)
-  BuildDepends: nocrypto, oUnit, x509
+  Path:            tests/
+  Modules:         dgst_tests.ml, base64_tests.ml, tests.ml
+  Install:         false
+  Build$:          flag(tests)
+  BuildDepends:    nocrypto, oUnit, x509
 
 Executable test_runner
-  Path: tests/
-  Install: false
-  CompiledObject: best
-  MainIs: testrunner.ml
-  Build$: flag(tests)
-  BuildDepends: testlib
+  Path:            tests/
+  Install:         false
+  CompiledObject:  best
+  MainIs:          testrunner.ml
+  Build$:          flag(tests)
+  BuildDepends:    testlib
 
 Test the_things
-  Command: $test_runner
-  TestTools: test_runner
-  Run$: flag(tests)
+  Command:         $test_runner
+  TestTools:       test_runner
+  Run$:            flag(tests)
