@@ -1,8 +1,8 @@
 # OASIS_START
-# DO NOT EDIT (digest: a4743685f53388323a0af8970179e26a)
+# DO NOT EDIT (digest: d5ea836721d534e38811f042ac27138e)
 version = "0.1"
 description = "from OpenSSL cmd"
-requires = "nocrypto oUnit x509"
+requires = "extlib nocrypto oUnit x509 cstruct nocrypto.unix"
 archive(byte) = "testlib.cma"
 archive(byte, plugin) = "testlib.cma"
 archive(native) = "testlib.cmxa"
