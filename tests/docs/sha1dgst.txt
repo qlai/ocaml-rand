@@ -1,1 +1,0 @@
-SHA1(akey.txt)= e7509a8c032f3bc2a8df1df476f8ef03436185fa

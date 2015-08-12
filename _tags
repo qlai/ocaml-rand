@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: e2a0ce8261b044525963a3da04754537)
+# DO NOT EDIT (digest: 8459c7a3fe729e445f58155f8c7227f5)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -63,21 +63,4 @@ true: annot, bin_annot
 <src/encode/*.ml{,i,y}>: pkg_extlib
 <src/encode/*.ml{,i,y}>: pkg_nocrypto
 <src/encode/*.ml{,i,y}>: pkg_nocrypto.unix
-# Library testlib
-"tests/testlib.cmxs": use_testlib
-# Executable test_runner
-<tests/testrunner.{native,byte}>: pkg_cstruct
-<tests/testrunner.{native,byte}>: pkg_extlib
-<tests/testrunner.{native,byte}>: pkg_nocrypto
-<tests/testrunner.{native,byte}>: pkg_nocrypto.unix
-<tests/testrunner.{native,byte}>: pkg_oUnit
-<tests/testrunner.{native,byte}>: pkg_x509
-<tests/testrunner.{native,byte}>: use_testlib
-<tests/*.ml{,i,y}>: pkg_cstruct
-<tests/*.ml{,i,y}>: pkg_extlib
-<tests/*.ml{,i,y}>: pkg_nocrypto
-<tests/*.ml{,i,y}>: pkg_nocrypto.unix
-<tests/*.ml{,i,y}>: pkg_oUnit
-<tests/*.ml{,i,y}>: pkg_x509
-<tests/*.ml{,i,y}>: use_testlib
 # OASIS_STOP

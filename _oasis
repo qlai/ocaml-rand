@@ -57,22 +57,22 @@ Executable aesctr
   BuildDepends:    nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 
-Library testlib
-  Path:            tests/
-  Modules:         Dgst_tests, Base64_tests, Tests
-  Install:         false
-  Build$:          flag(tests)
-  BuildDepends:    extlib, nocrypto, oUnit, x509, cstruct, nocrypto.unix
+#Library testlib
+#  Path:            tests/
+#  Modules:         Dgst_tests, Base64_tests, Tests
+#  Install:         false
+#  Build$:          flag(tests)
+#  BuildDepends:    extlib, nocrypto, oUnit, x509, cstruct, nocrypto.unix
 
-Executable test_runner
-  Path:            tests/
-  Install:         false
-  CompiledObject:  best
-  MainIs:          testrunner.ml
-  Build$:          flag(tests)
-  BuildDepends:    testlib
+#Executable test_runner
+#  Path:            tests/
+#  Install:         false
+#  CompiledObject:  best
+#  MainIs:          testrunner.ml
+#  Build$:          flag(tests)
+#  BuildDepends:    testlib
 
-Test the_things
-  Command:         $test_runner
-  TestTools:       test_runner
-  Run$:            flag(tests)
+#Test the_things
+#  Command:         $test_runner
+#  TestTools:       test_runner
+#  Run$:            flag(tests)

@@ -9,3 +9,4 @@ running
 anotherfile.txt
 infile.txt
 outfile.txt
+*.tmp
