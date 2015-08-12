@@ -59,7 +59,7 @@ Executable aesctr
 
 Library testlib
   Path:            tests/
-  Modules:         dgst_tests.ml, base64_tests.ml, tests.ml
+  Modules:         Dgst_tests, Base64_tests, Tests
   Install:         false
   Build$:          flag(tests)
   BuildDepends:    nocrypto, oUnit, x509

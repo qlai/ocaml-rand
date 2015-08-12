@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: a4743685f53388323a0af8970179e26a)
+version = "0.1"
+description = "from OpenSSL cmd"
+requires = "nocrypto oUnit x509"
+archive(byte) = "testlib.cma"
+archive(byte, plugin) = "testlib.cma"
+archive(native) = "testlib.cmxa"
+archive(native, plugin) = "testlib.cmxs"
+exists_if = "testlib.cma"
+# OASIS_STOP
+
