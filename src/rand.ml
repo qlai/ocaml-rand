@@ -21,6 +21,15 @@ open Common
 
 let ()= Nocrypto_entropy_unix.initialize ()
 
+(*let gen_with param n =
+  let g = Rng.create (module Rng.Generator.Fortuna) in
+  ( match param with
+    | `File name ->
+        let content = (* read file *) in
+        Rng.reseed ~g content
+    | `Auto -> Nocrypto_entropy_unix.reseed g ) ;
+  Rng.generate ~g n *)
+
 type encode = Noencode | Base64 | Hex
 
 let main (length:int) (encoding:encode)= 
@@ -73,14 +82,7 @@ let () = match Term.eval (rand_t, info) with
 
 open Nocrypto
 
-let gen_with param n =
-  let g = Rng.create (module Rng.Generator.Fortuna) in
-  ( match param with
-    | `File name ->
-        let content = (* read file *) in
-        Rng.reseed ~g content
-    | `Auto -> Nocrypto_entropy_unix.reseed g ) ;
-  Rng.generate ~g n
+
 
 
 let gen_with param n =
