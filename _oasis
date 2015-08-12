@@ -55,3 +55,24 @@ Executable aesctr
   Path: src/encode
   MainIs: aes_ctr.ml
   BuildDepends: nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+
+
+Library testlib
+  Path: tests/
+  Modules: dgst_tests.ml, base64_tests.ml
+  Install: false
+  Build$: flag(tests)
+  BuildDepends: nocrypto, oUnit, x509
+
+Executable test_runner
+  Path: tests/
+  Install: false
+  CompiledObject: best
+  MainIs: testrunner.ml
+  Build$: flag(tests)
+  BuildDepends: testlib
+
+Test the_things
+  Command: $test_runner
+  TestTools: test_runner
+  Run$: flag(tests)
