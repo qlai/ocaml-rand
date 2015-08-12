@@ -1,11 +1,14 @@
 open Cmdliner
 open Common
 
-let base64enc encode infile outfile =
+let b64enc encode infile =
   let coding = match encode with
   | E -> Nocrypto.Base64.encode
   | D -> Nocrypto.Base64.decode in
-  savefile outfile (Cstruct.to_string (coding (Cstruct.of_string (readfile infile))))
+(Cstruct.to_string (coding (Cstruct.of_string (readfile infile))))
+
+let base64enc encode infile outfile =
+  savefile outfile (b64enc encode infile)
 
  (*commandline interface*)
 
