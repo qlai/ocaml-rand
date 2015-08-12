@@ -18,7 +18,7 @@ Executable dgst
   Install:         true
   Path:            src/
   MainIs:          dgst.ml
-  BuildDepends:    nocrypto, nocrypto.unix, cmdliner, extlib, cstruct, cstruct.unix, hex, x509, unix
+  BuildDepends:    nocrypto, nocrypto.unix, cmdliner, cstruct, cstruct.unix, hex, x509, unix
 
 Executable base64
   Install:         true
@@ -62,7 +62,7 @@ Library testlib
   Modules:         Dgst_tests, Base64_tests, Tests
   Install:         false
   Build$:          flag(tests)
-  BuildDepends:    nocrypto, oUnit, x509
+  BuildDepends:    nocrypto, oUnit, x509, cstruct, nocrypto.unix
 
 Executable test_runner
   Path:            tests/
