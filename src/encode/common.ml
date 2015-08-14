@@ -13,8 +13,8 @@ let readfile bfile =
     let channel = open_in bfile in
       Std.input_all channel
 
-let rec padding str =
-    if (String.length str) mod 16 = 0 then str else padding (str^" ")
+let rec paddings str =
+    if (String.length str) mod 16 = 0 then str else paddings (str^" ")
 
 let createiv ivfile =
   match ivfile with  

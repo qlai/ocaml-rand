@@ -24,7 +24,7 @@ Executable base64
   Install:         true
   Path:            src/encode
   MainIs:          base64enc.ml
-  BuildDepends:    nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
+  BuildDepends:    str, nocrypto, nocrypto.unix, cmdliner, extlib, cstruct
 
 Executable aescbc
   Install:         true

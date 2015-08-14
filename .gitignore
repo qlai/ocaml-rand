@@ -10,3 +10,4 @@ anotherfile.txt
 infile.txt
 outfile.txt
 *.tmp?
+out.tmp
