@@ -20,6 +20,8 @@ do
   fi
 done
 
+# binary and hex tests
+
 codetype='hex binary'
 for coding in $codetype
 do
@@ -35,9 +37,19 @@ do
   fi
 done
 
-rm out.tmp1;
-rm out.tmp2;
-rm out.tmp3;
-rm out.tmp4;
+# hex with special format test
+openssl dgst -hex -r -out out.tmp5 $1
+./dgst.byte --hex -r --out out.tmp6 --in $1
+diff out.tmp5 out.tmp6;
+test3=$?;
+if [ "$test3" -eq 0 ];
+then 
+  echo "-r test passed for hex"
+else
+  echo "-r test failed for hex"
+fi;
+
+
+rm out.tmp?;
 
 exit 0
