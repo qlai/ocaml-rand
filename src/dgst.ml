@@ -54,13 +54,13 @@ let gethmac key msg digest encode cmode =
   | SHA384 -> SHA384.hmac key (Cstruct.of_string msg)
   | SHA512 -> SHA512.hmac key (Cstruct.of_string msg) in
   match encode with
-  | HEX -> cdisp cmode (Hex.of_cstruct hmacmsg)
-  | BINARY -> Cstruct.to_string hmacmsg
+  | HEX -> (cdisp cmode (Hex.of_cstruct hmacmsg))^"\n"
+  | BINARY -> (Cstruct.to_string hmacmsg)^"\n"
 
 let encoded encode cmode msg digest = 
   match encode with
-  | HEX -> cdisp cmode (Hex.of_cstruct (dimsg msg digest))
-  | BINARY -> Cstruct.to_string (dimsg msg digest)
+  | HEX -> (cdisp cmode (Hex.of_cstruct (dimsg msg digest)))^"\n"
+  | BINARY -> (Cstruct.to_string (dimsg msg digest))^"\n"
 
 let afterdigest infile digest msg= 
   (finddimode digest)^"("^(infile)^")= "^msg
@@ -76,25 +76,30 @@ let checkkey key =
   | "NA" -> failwith "no key entered"
   | _ -> key
 
+let output filename msg = 
+  match filename with
+  | "NA" -> print_endline msg
+  | _ -> savefile filename msg
+
 let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
-  let msgdigested = if hmackey != "NA" 
-  then gethmac (Cstruct.of_string (checkkey hmackey)) (readfile infile) digestmode encode c
-  else encoded encode c (readfile infile) digestmode in
-  if outfile != "NA" then savefile outfile msgdigested else ();
-  if hmackey != "NA"
-  then print_endline (hmacformat infile digestmode msgdigested)
+  let msgdigested = 
+    if hmackey <> "NA" 
+    then gethmac (Cstruct.of_string (checkkey hmackey)) (readfile infile) digestmode encode c
+    else encoded encode c (readfile infile) digestmode in
+(*  if outfile != "NA" then savefile outfile msgdigested else () *)
+  if hmackey <> "NA"
+  then output outfile (hmacformat infile digestmode msgdigested)
   else 
     if r = true  && c = false 
-    then print_endline (coreutils infile msgdigested)
-    else print_endline (afterdigest infile digestmode msgdigested);
+    then output outfile (coreutils infile msgdigested)
+    else output outfile (afterdigest infile digestmode msgdigested);
 (*need to figure out how to deal with signing parts*)
-  if sign != "NA" then sigencode sign (Cstruct.of_string msgdigested)
-  else if signature != "NA" then match verify, prverify with
+  if sign <> "NA" then sigencode sign (Cstruct.of_string msgdigested)
+  else if signature <> "NA" then match verify, prverify with
     | x, "NA" -> sigdecode x (load signature) 
     | "NA", x -> sigdecode x (load signature)
     | _, _ -> failwith "verification mode clash/ choose verification mode"
-  else raise Do_nothing 
-
+  else raise Do_nothing
   (*commandline interface*)
 
 let digestmode = 
@@ -105,10 +110,12 @@ let digestmode =
   let doc = "SHA224 hash function" in
   let sha224 = SHA224, Arg.info["sha224"] ~doc in
   let doc = "SHA384 hash function" in
-  let sha384 = SHA384, Arg.info["sha284"] ~doc in
+  let sha256 = SHA256, Arg.info["sha256"] ~doc in
+  let doc = "SHA256 hash function" in
+  let sha384 = SHA384, Arg.info["sha384"] ~doc in
   let doc = "SHA512 hash function" in
   let sha512 = SHA512, Arg. info["sha512"] ~doc in
-  Arg.(last & vflag_all [MD5] [md5; sha1; sha224; sha384; sha512])
+  Arg.(last & vflag_all [MD5] [md5; sha1; sha224; sha256; sha384; sha512])
 
 let encode =
   let doc = "Hex encoding" in
@@ -127,8 +134,8 @@ let r =
 
 let hmackey =
   let doc = "flag this if hmac required and enter your key" in
-  Arg.(value & opt string "NA" & info ["k"; "h"; "hmac"; "key"] ~doc)
-  
+  Arg.(value & opt string "NA" & info ["hmac"] ~doc)
+    
 let sign =
   let doc = "sign digest with private key in file; flag and enter filename (PEM)" in 
   Arg.(value & opt string "NA" & info ["sign"] ~doc)

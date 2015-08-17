@@ -24,8 +24,8 @@ let implode l =
 
 let infile =
   let doc = "filein" in
-  Arg.(value & opt string "infile.txt" & info ["i"; "in"] ~doc)
+  Arg.(value & opt string "NA" & info ["i"; "in"] ~doc)
 
 let outfile =
   let doc = "fileout" in
-  Arg.(value &opt string "outfile.txt" & info ["o"; "out"] ~doc)
+  Arg.(value &opt string "NA" & info ["o"; "out"] ~doc)

@@ -12,18 +12,18 @@ diff out.tmp3 out.tmp4;
 test2=$?;
 if [ "$test" -eq 0 -a "$test2" -eq 0 ];
 then # Do the thing if you get correct answer
-  echo "test passed"
+  echo "base64 test passed"
 else # Do the thing if you get wrong answer
   if [ "$test" -eq 1 ]
     then 
       if [ "$test2" -eq 1 ]
       then 
-        echo "both enco/deco failed"
+        echo "base64: both enco/deco failed"
       else 
-        echo "decode passed, encode failed"
+        echo "base64: decode passed, encode failed"
       fi
     else
-      echo "encode passed, decode failed"
+      echo "base64: encode passed, decode failed"
     fi
 fi;
 
