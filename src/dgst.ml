@@ -76,10 +76,12 @@ let checkkey key =
   | "NA" -> failwith "no key entered"
   | _ -> key
 
-let output filename msg = 
-  match filename with
-  | "NA" -> print_endline msg
-  | _ -> savefile filename msg
+let output filename mode msg msg2 = 
+  match filename, mode with
+  | "NA", HEX -> print_endline msg
+  | _ , HEX -> savefile filename msg
+  | "NA", BINARY -> print_endline msg2
+  | "NA", BINARY -> savefile filename msg2
 
 let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
   let msgdigested = 
@@ -88,11 +90,11 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
     else encoded encode c (readfile infile) digestmode in
 (*  if outfile != "NA" then savefile outfile msgdigested else () *)
   if hmackey <> "NA"
-  then output outfile (hmacformat infile digestmode msgdigested)
+  then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
   else 
     if r = true  && c = false 
-    then output outfile (coreutils infile msgdigested)
-    else output outfile (afterdigest infile digestmode msgdigested);
+    then output outfile encode (coreutils infile msgdigested) msgdigested
+    else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
 (*need to figure out how to deal with signing parts*)
   if sign <> "NA" then sigencode sign (Cstruct.of_string msgdigested)
   else if signature <> "NA" then match verify, prverify with
