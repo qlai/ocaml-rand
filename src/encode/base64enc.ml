@@ -2,10 +2,9 @@ open Cmdliner
 open Common
 
 let b64enc encode infile =
-  let coding = match encode with
-  | E -> Nocrypto.Base64.encode
-  | D -> Nocrypto.Base64.decode in
-(Cstruct.to_string (coding (Cstruct.of_string (readfile infile)))^"\n")
+  match encode with
+  | E -> Cstruct.to_string (Nocrypto.Base64.encode (Cstruct.of_string (readfile infile))) ^ "\n"
+  | D -> Cstruct.to_string (Nocrypto.Base64.decode (Cstruct.of_string (readfile infile)))
 
 let splitting str m = 
   let rec aux str n acc = function
@@ -18,13 +17,17 @@ let splitting str m =
 let concatstrlist l str =
   let rec aux acc str = function
     | [] -> acc
+    | [x] -> x^acc
     | hd::tl -> aux (hd^str^acc) str tl in
   aux "" str (List.rev l)
 
 let base64enc encode infile outfile=
-  savefile outfile (concatstrlist (splitting (b64enc encode infile) 64) "\n") 
-(*
-let base64enc encode infile outfile =
+  if encode = E 
+  then savefile outfile (concatstrlist (splitting (b64enc encode infile) 64) "\n")
+  else savefile outfile (b64enc encode infile)
+  
+  (*
+let base64enc encode iniiiiiiiifile outfile =
   savefile outfile (b64enc encode infile)
 *)
  (*commandline interface*)
