@@ -4,6 +4,8 @@ open Nocrypto
 open Hash
 open Dgst_verify
 
+let () = Nocrypto_entropy_unix.initialize ()
+
 (*need function to choose digests*)
 exception Do_nothing
 
@@ -54,22 +56,21 @@ let gethmac key msg digest encode cmode =
   | SHA384 -> SHA384.hmac key (Cstruct.of_string msg)
   | SHA512 -> SHA512.hmac key (Cstruct.of_string msg) in
   match encode with
-  | HEX -> (cdisp cmode (Hex.of_cstruct hmacmsg))^"\n"
-  | BINARY -> (Cstruct.to_string hmacmsg)^"\n"
-
+  | HEX -> (cdisp cmode (Hex.of_cstruct hmacmsg))
+  | BINARY -> (Cstruct.to_string hmacmsg)
 let encoded encode cmode msg digest = 
   match encode with
-  | HEX -> (cdisp cmode (Hex.of_cstruct (dimsg msg digest)))^"\n"
-  | BINARY -> (Cstruct.to_string (dimsg msg digest))^"\n"
+  | HEX -> (cdisp cmode (Hex.of_cstruct (dimsg msg digest)))
+  | BINARY -> (Cstruct.to_string (dimsg msg digest))
 
 let afterdigest infile digest msg= 
-  (finddimode digest)^"("^(infile)^")= "^msg
+  (finddimode digest)^"("^(infile)^")= "^msg^"\n"
   
 let coreutils infile msg = 
-  msg^" *"^infile
+  msg^" *"^infile^"\n"
   
 let hmacformat infile digest msg =
-  "HMAC-"^(finddimode digest)^"("^(infile)^")= "^msg
+  "HMAC-"^(finddimode digest)^"("^(infile)^")= "^msg^"\n"
   
 let checkkey key =
   match key with
@@ -81,7 +82,7 @@ let output filename mode msg msg2 =
   | "NA", HEX -> print_endline msg
   | _ , HEX -> savefile filename msg
   | "NA", BINARY -> print_endline msg2
-  | "NA", BINARY -> savefile filename msg2
+  | _ , BINARY -> savefile filename msg2
 
 let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
   let msgdigested = 
