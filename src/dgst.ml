@@ -89,7 +89,12 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
     if hmackey <> "NA" 
     then gethmac (Cstruct.of_string (checkkey hmackey)) (readfile infile) digestmode encode c
     else encoded encode c (readfile infile) digestmode in
-(*  if outfile != "NA" then savefile outfile msgdigested else () *)
+  if hmackey <> "NA"
+    then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
+    else 
+      if r = true  && c = false 
+      then output outfile encode (coreutils infile msgdigested) msgdigested
+      else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
 (*need to figure out how to deal with signing parts*)
   if sign <> "NA" 
     then savefile outfile (Cstruct.to_string (sigencode sign (Cstruct.of_string msgdigested)))
@@ -98,13 +103,7 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
       then match verify, prverify with
       | x, "NA" | "NA", x -> sigdecode x (load signature) 
       | _, _ -> failwith "verification mode clash/ choose verification mode"
-    else
-    if hmackey <> "NA"
-    then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
-    else 
-      if r = true  && c = false 
-      then output outfile encode (coreutils infile msgdigested) msgdigested
-      else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
+    else raise Do_nothing
 
   
   
