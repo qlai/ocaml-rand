@@ -97,10 +97,9 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
     then output outfile encode (coreutils infile msgdigested) msgdigested
     else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
 (*need to figure out how to deal with signing parts*)
-  if sign <> "NA" then sigencode sign (Cstruct.of_string msgdigested)
+  if sign <> "NA" then savefile outfile (Cstruct.to_string (sigencode sign (Cstruct.of_string msgdigested)))
   else if signature <> "NA" then match verify, prverify with
-    | x, "NA" -> sigdecode x (load signature) 
-    | "NA", x -> sigdecode x (load signature)
+    | x, "NA" | "NA", x -> sigdecode x (load signature) 
     | _, _ -> failwith "verification mode clash/ choose verification mode"
   else raise Do_nothing
   (*commandline interface*)
