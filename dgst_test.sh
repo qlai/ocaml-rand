@@ -1,10 +1,10 @@
-#!/bin/bash 
+#!/bin/bash -x 
 
 # $1 input file
 
 # hmac tests
 
-hashfuncs='md5 sha1 sha224 sha256 sha384 sha512'
+hashfuncs='md5 '
 
 for hashfun in $hashfuncs
 do
@@ -19,7 +19,7 @@ do
     echo $hashfun "hmac test failed"
   fi
 done
-
+'
 # binary and hex tests
 
 codetype='hex binary'
@@ -51,5 +51,5 @@ fi;
 
 
 rm out.tmp?;
-
+'
 exit 0
