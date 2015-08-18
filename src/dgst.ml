@@ -99,12 +99,12 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
       | x, "NA" | "NA", x -> sigdecode x (load signature) 
       | _, _ -> failwith "verification mode clash/ choose verification mode"
     else
-      if hmackey <> "NA"
-        then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
-      else 
-        if r = true  && c = false 
-          then output outfile encode (coreutils infile msgdigested) msgdigested
-        else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested
+    if hmackey <> "NA"
+    then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
+    else 
+      if r = true  && c = false 
+      then output outfile encode (coreutils infile msgdigested) msgdigested
+      else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
 
   
   
