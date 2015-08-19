@@ -4,8 +4,6 @@ open Nocrypto
 open Hash
 open Dgst_verify
 
-let () = Nocrypto_entropy_unix.initialize ()
-
 (*need function to choose digests*)
 exception Do_nothing
 
@@ -97,7 +95,7 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
       else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
 (*need to figure out how to deal with signing parts*)
   if sign <> "NA" 
-    then savefile outfile (Cstruct.to_string (sigencode sign (Cstruct.of_string msgdigested)))
+    then sigencode sign (Cstruct.of_string msgdigested)
   else 
     if signature <> "NA" 
       then match verify, prverify with
@@ -166,7 +164,9 @@ let cmd =
   Term.(pure dgst $ digestmode $ encode $ c $ r $ hmackey $ outfile $ infile $ sign $ verify $ prverify $ signature),
   Term.info "dgst" ~version:"0.0.1" ~doc ~man
 
-let () = match Term.eval cmd with 
-`Error _ -> exit 1 | _ -> exit 0
+let () = 
+  Nocrypto_entropy_unix.initialize ();
+  match Term.eval cmd with 
+  `Error _ -> exit 1 | _ -> exit 0
 
 
