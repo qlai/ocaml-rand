@@ -2,13 +2,10 @@ _build
 *.sw?
 *.byte
 *.native
-somefile.txt
 setup.data
 setup.log
 running
-anotherfile.txt
-infile.txt
-outfile.txt
 *.tmp?
 out.tmp
 *.pem
+*.txt

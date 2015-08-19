@@ -55,8 +55,8 @@ let aaseedfile =
   Arg.(value & opt string "none" & info ["seedfile"] ~doc)
 
 let encodemode = 
-  let doc = "perform base64/PEM encoding" in
-  let base64 = Base64, Arg.info ["base64"; "pem"] ~doc in
+  let doc = "perform base64 encoding" in
+  let base64 = Base64, Arg.info ["base64"] ~doc in
   let doc = "perform hex encoding" in 
   let hex = Hex, Arg.info ["hex"] ~doc in
   let doc = "neither base64 or hex encoding required" in
