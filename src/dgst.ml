@@ -95,11 +95,11 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
       else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
 (*need to figure out how to deal with signing parts*)
   if sign <> "NA" 
-    then sigencode sign (Cstruct.of_string msgdigested)
+    then print_endline (Cstruct.to_string (sigencode sign (Cstruct.of_string msgdigested)))
   else 
     if signature <> "NA" 
       then match verify, prverify with
-      | x, "NA" | "NA", x -> sigdecode x (load signature) 
+      | x, "NA" | "NA", x -> print_endline (Cstruct.to_string (sigdecode x (load signature))) 
       | _, _ -> failwith "verification mode clash/ choose verification mode"
     else raise Do_nothing
 

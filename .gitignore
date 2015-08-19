@@ -11,3 +11,4 @@ infile.txt
 outfile.txt
 *.tmp?
 out.tmp
+*.pem

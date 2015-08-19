@@ -6,7 +6,9 @@ let savefile afile thingtobesaved =
   close_out channel 
 
 let readfile bfile =
-  let channel = open_in bfile in
+  match bfile with 
+  | "NA" -> failwith "no input file"
+  | _ -> let channel = open_in bfile in
   Std.input_all channel
   
 let explode s =
