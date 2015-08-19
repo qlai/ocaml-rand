@@ -35,7 +35,11 @@ type encode = Noencode | Base64 | Hex
 let main (length:int) (encoding:encode)= 
   let bytes = Nocrypto.Rng.generate length in
   match encoding with
-  |Noencode |Hex -> bytes
+  |Noencode -> bytes
+  |Hex -> Hex.of_cstruct bytes; 
+    match bytes with 
+    | `Hex(str) -> str
+    | _ -> failwith "not Hex.t"
   |Base64 -> Nocrypto.Base64.encode bytes
 
 let number = 64
