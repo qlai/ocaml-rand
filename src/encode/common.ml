@@ -9,17 +9,24 @@ let savefile afile thingtobesaved =
       output_string channel thingtobesaved;
         close_out channel 
 
+let output file msg =
+  match file with
+  | "NA" -> print_endline msg
+  | _ -> savefile file msg
+
 let readfile bfile =
-    let channel = open_in bfile in
+    let channel = if bfile <> "NA" then open_in bfile else failwith "no input file" in
       Std.input_all channel
 
 let rec paddings str =
     if (String.length str) mod 16 = 0 then str else paddings (str^" ")
 
-let createiv ivfile =
-  match ivfile with  
-  |"NA" -> Rng.generate 16
-  | _ -> (*TODO: seed rng from this file*) Cstruct.of_string (readfile ivfile)
+let createiv ivfile n =
+  let g = Rng.create (module Rng.Generators.Fortuna) in 
+  (match ivfile with  
+  |"NA" -> Nocrypto_entropy_unix.reseed g; print_endline "warning, rand iv"
+  | _ -> (*TODO: seed rng from this file*) Rng.reseed ~g (Cstruct.of_string (ivfile)) );
+  Rng.generate ~g n 
   
 let encode =
   let doc = "encoding" in
@@ -42,11 +49,11 @@ let keyfile =
   
 let infile =
   let doc = "filein" in
-  Arg.(value & opt string "infile.txt" & info ["i"; "in"] ~doc)
+  Arg.(value & opt string "NA" & info ["i"; "in"] ~doc)
 
 let outfile =
   let doc = "fileout" in
-  Arg.(value &opt string "outfile.txt" & info ["o"; "out"] ~doc)
+  Arg.(value &opt string "NA" & info ["o"; "out"] ~doc)
 
 let ivfile =
   let doc = "ivfile" in
