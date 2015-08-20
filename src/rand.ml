@@ -17,53 +17,65 @@ rand [-out OUTFILE | --outfile=OUTFILE] [-seed RANDSEED | --randseed=RANDSEED] [
 open Hex
 open Cmdliner
 open Common
+open Nocrypto
 (*implementation*)
+let number = 64 (* initial no of bits*)
 
 let ()= Nocrypto_entropy_unix.initialize ()
 
-(*let gen_with param n =
-  let g = Rng.create (module Rng.Generator.Fortuna) in
+type seeding =
+  [ `File of string | `Auto of string ]
+
+let decideseeding seedfile =
+  match seedfile with
+  | "NA" -> `Auto seedfile
+  | _ -> `File seedfile
+
+let gen_with param n=
+  let g = Rng.create (module Rng.Generators.Fortuna) in
   ( match param with
-    | `File name ->
-        let content = (* read file *) in
-        Rng.reseed ~g content
-    | `Auto -> Nocrypto_entropy_unix.reseed g ) ;
-  Rng.generate ~g n *)
+    | `File filename ->
+        let content = (readfile filename) in
+        Rng.reseed ~g (Cstruct.of_string(content))
+    | `Auto _ -> Nocrypto_entropy_unix.reseed g ) ;
+  Rng.generate ~g n 
 
 type encode = Noencode | Base64 | Hex
 
-let main (length:int) (encoding:encode)= 
-  let bytes = Nocrypto.Rng.generate length in
+let unhexing sth =
+  match sth with 
+  | `Hex (str) -> Cstruct.of_string str
+  | _ -> failwith "not Hex.t"
+
+let main (length:int) (encoding:encode) seedfile = 
+  let bytes = gen_with (decideseeding seedfile) length in
   match encoding with
   |Noencode -> bytes
-  |Hex -> Hex.of_cstruct bytes; 
-    match bytes with 
-    | `Hex(str) -> str
-    | _ -> failwith "not Hex.t"
+  |Hex -> unhexing (Hex.of_cstruct bytes)
   |Base64 -> Nocrypto.Base64.encode bytes
 
-let number = 64
-let encode = Base64
-let outfile = "somefile.txt"
-let running () = savefile outfile (Cstruct.to_string (main number encode));;(*TODO: Sort out encoding for hex for matching case*)
+let output outfile msg =
+  match outfile with 
+  | "NA" -> print_endline msg
+  | _ -> savefile outfile msg
 
 let rand (aaoutfile:string) (aaseedfile:string) (encodemode:encode) (nobits:int)=
-  savefile aaoutfile (Cstruct.to_string(main nobits encodemode)) 
+  output aaoutfile (Cstruct.to_string(main nobits encodemode aaseedfile)) 
 
 let aaoutfile =
   let doc = "This is the file that the PRN will be written to" in
-  Arg.(value & opt  string "prngstring.txt" & info ["o"; "out"] ~doc)
+  Arg.(value & opt  string "NA" & info ["o"; "out"] ~doc)
 
 let aaseedfile =
-  let doc = "This will be used to seed PRNG" in
-  Arg.(value & opt string "none" & info ["seedfile"] ~doc)
+  let doc = "seed with file" in
+  Arg.(value & opt string "NA" & info ["seedfile"] ~doc)
 
 let encodemode = 
-  let doc = "perform base64 encoding" in
+  let doc = "perform base64 encoding, see --none if not flagged" in
   let base64 = Base64, Arg.info ["base64"] ~doc in
-  let doc = "perform hex encoding" in 
+  let doc = "perform hex encoding, see --none if not flagged" in 
   let hex = Hex, Arg.info ["hex"] ~doc in
-  let doc = "neither base64 or hex encoding required" in
+  let doc = "neither base64 or hex encoding required, returns raw bytes" in
   let noencode = Noencode, Arg.info ["none";"noencoding"] ~doc in 
   Arg.(last & vflag_all [Noencode] [base64; hex; noencode])
  
@@ -85,9 +97,6 @@ let () = match Term.eval (rand_t, info) with
 (*
 
 open Nocrypto
-
-
-
 
 let gen_with param n =
   ( match param with
