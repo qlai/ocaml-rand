@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 # $1 key; $2 input file
 
@@ -23,5 +23,10 @@ do
   then echo "decoded encode file successfully for" $mode
   else echo "decoding failed for" $mode 
   fi
+rm *.tmp?
+
 done
+
+
+
 exit 0

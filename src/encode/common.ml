@@ -11,7 +11,7 @@ let savefile afile thingtobesaved =
 
 let output file msg =
   match file with
-  | "NA" -> print_endline msg
+  | "NA" -> print_string msg
   | _ -> savefile file msg
 
 let readfile bfile =
