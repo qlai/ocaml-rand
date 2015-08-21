@@ -5,11 +5,16 @@
 # hmac tests
 
 hashfuncs='md5 sha1 sha224 sha256 sha384 sha512'
+echo "hmac test"
+echo "please enter hmac key to test"
+read hmackey
+echo "please enter input file to test"
+read fileinput
 
 for hashfun in $hashfuncs
 do
-  openssl dgst -$hashfun -hmac "helloworld" -out out.tmp1 $1
-  ./dgst.byte --$hashfun --hmac "helloworld" --out out.tmp2 --in $1
+  openssl dgst -$hashfun -hmac $hmackey -out out.tmp1 $fileinput
+  ./dgst.byte --$hashfun --hmac $hmackey --out out.tmp2 --in $fileinput
   diff out.tmp1 out.tmp2;
   test=$?;
   if [ "$test" -eq 0 ];
@@ -21,12 +26,15 @@ do
 done
 
 # binary and hex tests
+echo "binary and hex tests"
+echo "please enter input file to test"
+read fileinput2
 
 codetype='hex binary'
 for coding in $codetype
 do
-  openssl dgst -$coding -out out.tmp3 $1
-  ./dgst.byte --$coding --out out.tmp4 --in $1
+  openssl dgst -$coding -out out.tmp3 $fileinput2
+  ./dgst.byte --$coding --out out.tmp4 --in $fileinput2
   diff out.tmp3 out.tmp4;
   test2=$?;
   if [ "$test2" -eq 0 ];
@@ -38,8 +46,12 @@ do
 done
 
 # hex with special format test
-openssl dgst -hex -r -out out.tmp5 $1
-./dgst.byte --hex -r --out out.tmp6 --in $1
+echo "test with coreutils formatting"
+echo "please enter input file for test"
+read fileinput3
+
+openssl dgst -hex -r -out out.tmp5 $fileinput3
+./dgst.byte --hex -r --out out.tmp6 --in $fileinput2
 diff out.tmp5 out.tmp6;
 test3=$?;
 if [ "$test3" -eq 0 ];

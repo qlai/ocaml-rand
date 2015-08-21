@@ -1,9 +1,11 @@
 #!/bin/bash 
 
 # $1 = infile
+echo "Please enter file name to test"
+read fileinput
 
-openssl enc -base64 -in $1 -out out.tmp1
-./base64enc.byte -e --in $1 --out out.tmp2
+openssl enc -base64 -in $fileinput -out out.tmp1
+./base64enc.byte -e --in $fileinput --out out.tmp2
 diff out.tmp1 out.tmp2;
 test=$?;
 openssl enc -base64 -d -in out.tmp1 -out out.tmp3
