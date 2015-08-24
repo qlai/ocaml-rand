@@ -70,10 +70,10 @@ let coreutils infile msg =
 let hmacformat infile digest msg =
   "HMAC-"^(finddimode digest)^"("^(infile)^")= "^msg^"\n"
   
-let checkkey key =
+let checkkey key sign verify prverify =
   match key with
   | "NA" -> failwith "no key entered"
-  | _ -> key
+  | _ -> if verify <> "NA" || sign <> "NA" || prverify <> "NA" then failwith "MAC and Signing key cannot be both specified" else key
 
 let output filename mode msg msg2 = 
   match filename, mode with
@@ -85,7 +85,7 @@ let output filename mode msg msg2 =
 let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
   let msgdigested = 
     if hmackey <> "NA" 
-    then gethmac (Cstruct.of_string (checkkey hmackey)) (readfile infile) digestmode encode c
+    then gethmac (Cstruct.of_string (checkkey hmackey sign verify prverify)) (readfile infile) digestmode encode c
     else encoded encode c (readfile infile) digestmode in
   if hmackey <> "NA"
     then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
