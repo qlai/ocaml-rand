@@ -4,6 +4,12 @@ open Nocrypto
 open Hash
 open Dgst_verify
 
+type digest = 
+  | MD5 | SHA1 | SHA224 | SHA256 | SHA384 | SHA512
+
+type enc =
+  | HEX | BINARY
+
 let digestmode = 
   let doc = "MD5 hash function" in
   let md5 = MD5, Arg.info ["md5"] ~doc in
