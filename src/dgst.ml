@@ -70,11 +70,11 @@ let coreutils infile msg =
 let hmacformat infile digest msg =
   "HMAC-"^(finddimode digest)^"("^(infile)^")= "^msg^"\n"
   
-let checkkey key sign verify prverify =
+let checkkey key sign =
   match key with
   | "NA" -> failwith "no key entered"
-  | _ -> if verify <> "NA" || sign <> "NA" || prverify <> "NA" then failwith "MAC and Signing key cannot be both specified" else key
-
+  | _ -> if sign = "NA" then key else failwith "MAC and Signing key cannot be both specified"
+  
 let output filename mode msg msg2 = 
   match filename, mode with
   | "NA", HEX -> print_endline msg
@@ -85,7 +85,7 @@ let output filename mode msg msg2 =
 let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
   let msgdigested = 
     if hmackey <> "NA" 
-    then gethmac (Cstruct.of_string (checkkey hmackey sign verify prverify)) (readfile infile) digestmode encode c
+    then gethmac (Cstruct.of_string (checkkey hmackey sign)) (readfile infile) digestmode encode c
     else encoded encode c (readfile infile) digestmode in
   if hmackey <> "NA"
     then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
@@ -94,8 +94,7 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
       then output outfile encode (coreutils infile msgdigested) msgdigested
       else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
 (*need to figure out how to deal with signing parts*)
-  signandverify sign verify prverify signature msgdigested outfile
-  
+    signandverify sign verify prverify signature (Cstruct.of_string msgdigested) outfile
   
   (*commandline interface*)
 
@@ -134,7 +133,7 @@ let hmackey =
   Arg.(value & opt string "NA" & info ["hmac"] ~doc)
     
 let sign =
-  let doc = "sign digest with private key in file; flag and enter filename (PEM)" in 
+  let doc = "sign digest with private key in file; flag and enter filename (key.pem)" in 
   Arg.(value & opt string "NA" & info ["sign"] ~doc)
   
 let verify =
