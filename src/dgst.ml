@@ -5,13 +5,7 @@ open Hash
 open Dgst_verify
 open Dgst_cmdl
 
-exception Do_nothing
-
-type digest = 
-  | MD5 | SHA1 | SHA224 | SHA256 | SHA384 | SHA512
-
-type enc =
-  | HEX | BINARY
+(*exception Do_nothing*)
 
 let finddimode digest =
   match digest with 
