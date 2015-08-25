@@ -4,7 +4,7 @@ open Nocrypto
 open Hash
 open Dgst_verify
 
-(*need function to choose digests*)
+
 exception Do_nothing
 
 type digest = 
@@ -75,25 +75,31 @@ let checkkey key sign =
   | "NA" -> failwith "no key entered"
   | _ -> if sign = "NA" then key else failwith "MAC and Signing key cannot be both specified"
   
-let output filename mode msg msg2 = 
-  match filename, mode with
+let output filename mode msg msg2 verify prverify = 
+  if verify <> "NA" || prverify <> "NA" 
+  then ()
+  else match filename, mode with
   | "NA", HEX -> print_endline msg
   | _ , HEX -> savefile filename msg
   | "NA", BINARY -> print_endline msg2
   | _ , BINARY -> savefile filename msg2
 
+let input filename verify prverify =
+  match verify, prverify with
+  | "NA", "NA" -> readfile filename
+  | _, "NA" | "NA", _ | _, _ -> "no msg for verifying"
+
 let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
   let msgdigested = 
     if hmackey <> "NA" 
-    then gethmac (Cstruct.of_string (checkkey hmackey sign)) (readfile infile) digestmode encode c
-    else encoded encode c (readfile infile) digestmode in
+    then gethmac (Cstruct.of_string (checkkey hmackey sign)) (input infile verify prverify) digestmode encode c
+    else encoded encode c (input infile verify prverify) digestmode in
   if hmackey <> "NA"
-    then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested
+    then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested verify prverify
     else 
       if r = true  && c = false 
-      then output outfile encode (coreutils infile msgdigested) msgdigested
-      else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested;
-(*need to figure out how to deal with signing parts*)
+      then output outfile encode (coreutils infile msgdigested) msgdigested verify prverify
+      else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested verify prverify;
     signandverify sign verify prverify signature (Cstruct.of_string msgdigested) outfile
   
   (*commandline interface*)
