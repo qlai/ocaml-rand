@@ -1,3 +1,9 @@
+open Cmdliner
+open Common
+open Nocrypto
+open Hash
+open Dgst_verify
+
 let digestmode = 
   let doc = "MD5 hash function" in
   let md5 = MD5, Arg.info ["md5"] ~doc in
