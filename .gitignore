@@ -9,3 +9,4 @@ running
 out.tmp
 *.pem
 *.txt
+?key

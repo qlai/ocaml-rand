@@ -69,8 +69,8 @@ let checkkey key sign =
   | "NA" -> failwith "no key entered"
   | _ -> if sign = "NA" then key else failwith "MAC and Signing key cannot be both specified"
   
-let output filename mode msg msg2 verify prverify = 
-  if verify <> "NA" || prverify <> "NA" 
+let output filename mode msg msg2 sign verify prverify = 
+  if verify <> "NA" || prverify <> "NA" || sign <> "NA"
   then ()
   else match filename, mode with
   | "NA", HEX -> print_endline msg
@@ -78,23 +78,23 @@ let output filename mode msg msg2 verify prverify =
   | "NA", BINARY -> print_endline msg2
   | _ , BINARY -> savefile filename msg2
 
-let input filename verify prverify =
-  match verify, prverify with
-  | "NA", "NA" -> readfile filename
-  | _, "NA" | "NA", _ | _, _ -> "no msg for verifying"
 
 let dgst digestmode encode c r hmackey outfile infile sign verify prverify signature =
   let msgdigested = 
     if hmackey <> "NA" 
-    then gethmac (Cstruct.of_string (checkkey hmackey sign)) (input infile verify prverify) digestmode encode c
-    else encoded encode c (input infile verify prverify) digestmode in
+    then gethmac (Cstruct.of_string (checkkey hmackey sign)) (readfile infile) digestmode encode c
+    else encoded encode c (readfile infile) digestmode in
   if hmackey <> "NA"
-    then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested verify prverify
+    then output outfile encode (hmacformat infile digestmode msgdigested) msgdigested sign verify prverify
     else 
       if r = true  && c = false 
-      then output outfile encode (coreutils infile msgdigested) msgdigested verify prverify
-      else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested verify prverify;
-    signandverify sign verify prverify signature (Cstruct.of_string msgdigested) outfile
+      then output outfile encode (coreutils infile msgdigested) msgdigested sign verify prverify
+      else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested sign verify prverify;
+    let vermsg = signandverify sign verify prverify signature (Cstruct.of_string msgdigested) outfile in
+    match compare vermsg msgdigested with 
+    | 0 -> print_endline "Verification OK"
+    | 1 -> print_endline "Verifiction failed"
+    | _ -> failwith "compare function failure"
   
   (*commandline interface*)
 
