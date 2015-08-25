@@ -40,6 +40,7 @@ opam install nocrypto x509 cstruct cmdliner extlib
 >  hex or base64 encoding for the output
 >(--NoOfBits can only be changed in the code manually)
 
+### ============
 
 >### dgst.byte
 >#### Name
@@ -74,6 +75,7 @@ opam install nocrypto x509 cstruct cmdliner extlib
 >* To get HMAC `./dgst.byte --sha1 --hmac "thisismyHMACkey" --in message.txt --out msgdgst.txt`
 >* To sign a file `./dgst.byte --sha244 --sign prkey --in message.txt --out signed.txt`
 
+### ============
 
 >### aes_ctr.byte
 >#### Name 
@@ -87,6 +89,7 @@ opam install nocrypto x509 cstruct cmdliner extlib
 >  manually enter key as string or use the key in a file (tested and working with txt at the moment only)
 >--in and --out -> see for dgst
 
+### ============
 
 >### base64enc.byte
 >#### Name
