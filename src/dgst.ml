@@ -90,11 +90,8 @@ let dgst digestmode encode c r hmackey outfile infile sign verify prverify signa
       if r = true  && c = false 
       then output outfile encode (coreutils infile msgdigested) msgdigested sign verify prverify
       else output outfile encode (afterdigest infile digestmode msgdigested) msgdigested sign verify prverify;
-    let vermsg = signandverify sign verify prverify signature (Cstruct.of_string msgdigested) outfile in
-    match compare vermsg msgdigested with 
-    | 0 -> print_endline "Verification OK"
-    | 1 -> print_endline "Verifiction failed"
-    | _ -> failwith "compare function failure"
+  signandverify sign verify prverify signature (Cstruct.of_string msgdigested) outfile
+
   
   (*commandline interface*)
 
