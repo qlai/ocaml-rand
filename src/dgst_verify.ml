@@ -42,12 +42,24 @@ let prsigdecode prkeyfile signature =
   match Rsa.PKCS1.sig_decode ~key:key signature with
   | Some x -> (Cstruct.to_string x)
   | None -> "failed - no output"
+  
+let comparemsg vermsg digmsg =
+  match compare vermsg digmsg with 
+  | 0 -> print_endline "Verification OK"
+  | 1 -> print_endline "Verifiction failed"
+  | _ -> failwith "compare function failure"
 
 let signandverify sign verify prverify signature msg outfile =
   match sign, verify, prverify with 
     | "NA", "NA", "NA" -> () 
-    | "NA", "NA", _ -> if signature <> "NA" then prsigdecode prverify (Cstruct.of_string(readfile signature)) else failwith "no signature file"
-    | "NA", _, "NA" -> if signature <> "NA" then sigdecode verify (Cstruct.of_string(readfile signature)) else failwith "no signature file"
+    | "NA", "NA", _ -> if signature <> "NA" 
+    then comparemsg (prsigdecode prverify (Cstruct.of_string(readfile signature))) (Cstruct.to_string msg)
+    else failwith "no signature file"
+    | "NA", _, "NA" -> if signature <> "NA" 
+    then comparemsg (sigdecode verify (Cstruct.of_string(readfile signature))) (Cstruct.to_string msg)
+    else failwith "no signature file"
     | _, "NA", "NA" -> sigencode sign msg outfile
     | "NA", _, _ | _, "NA", _ | _, _, "NA" | _, _, _-> failwith "error in calling too many functions"
+    
+
     
