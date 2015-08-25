@@ -9,5 +9,7 @@ read infile
 
 
 ./dgst.byte --sign $prkey --in $infile --out out.tmp1 
+echo "testing verify"
 ./dgst.byte --verify $pubkey --signature out.tmp1 --in $infile
+echo "testing prverify"
 ./dgst.byte --prverify $prkey --signature out.tmp1 --in $infile
